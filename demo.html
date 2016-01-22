@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- <!DOCTYPE html> -->
+<html>
+<header>
+	<meta charset="UTF-8">
+	<title>bubbel.js DEMO</title>
+	<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+	
+
+	<!-- Bootstrap 3.3.6 -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<!-- Font Awesome Icons -->
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+	<style>
+		form[role="form"] { width: 80%; margin-left: 10%; margin-right: 10%; }
+		h1 { text-decoration: underline; }
+		footer { font-size: 8pt; text-align: center; }
+	</style>
+</header>
+
+<body>
+
+	<!-- jQuery 2.1.4 -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<!-- script>if (typeof jQuery === 'undefined') {
+	  document.write(unescape('%3Cscript%20src%3D%22../jquery/jquery-2.1.4.min.js%22%3E%3C/script%3E'));
+	}
+	</script -->
+	<!-- Bootstrap 3.3.6 JS -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	
+	<link href="bubbel.css" rel="stylesheet" type="text/css" />
+	<script src="bubbel.js"></script>
+	
+<div class="col-sm-offset-2 col-sm-10"><h1>bubbel.js</h1></div>
+
+<form class="form-horizontal" role="form">
+
+<div class="form-group">
+	<label class="control-label col-sm-2" for="meerdere">Meerdere:</label>
+	<div class="col-sm-10">
+		<input name="meerdere[]" value='["a","b"]' multiple="true" class="form-control" id="meerdere" />
+	</div>
+</div>
+<script>bubbel('meerdere');</script>
+
+
+<div class="form-group">
+	<label class="control-label col-sm-2" for="toegewezen">Toegewezen meerdere:</label>
+	<div class="col-sm-10">
+		<input name="toegewezen[]" value='{"1":"a","2":"b"}' assigned="true" multiple="true" class="form-control" id="toegewezen"/>
+	</div>
+</div>
+<script>bubbel('toegewezen');</script>
+
+<div class="form-group">
+	<label class="control-label col-sm-2" for="link">Link:</label>
+	<div class="col-sm-10">
+		<input type="link" value="from~link:(extra)(extra)/description" data-search="/search.php" class="form-control" id="link" />
+	</div>
+</div>
+<script>bubbel('link');</script>
+
+<div class="form-group">
+	<label class="control-label col-sm-2" for="multiplelink">Meerdere Links:</label>
+	<div class="col-sm-10">
+		<input type="link" value="from~link:(extra)(extra)/description" data-search="/search.php" multiple="true" class="form-control" id="multiplelink" />
+	</div>
+</div>
+<script>bubbel('multiplelink');</script>
+
+<div class="form-group">
+	<label class="control-label col-sm-2" for="qTranslate">qTranslate:</label>
+	<div class="col-sm-10">
+		<input type="qTranslate" value="[:en]English[:nl]Nederlands[:]" class="form-control" id="qTranslate" />
+		<br/>
+		<textarea class="qTranslate form-control" mode="short" id="qTranslatearea">[:en]English[:nl]Nederlands[:]</textarea>
+	</div>
+</div>
+<script>bubbel('qTranslate'); bubbel('qTranslatearea'); </script>
+
+<div class="form-group">
+	<label class="control-label col-sm-2" for="datum">Datum:</label>
+	<div class="col-sm-10">
+		<input type="datum" require="year" disable="day" class="form-control" id="datum" />
+	</div>
+</div>
+<script>bubbel('datum');</script>
+
+<div class="form-group">
+	<label class="control-label col-sm-2" for="recept">Recept:</label>
+	<div class="col-sm-10">
+		<input type="recept" class="form-control" id="recept" />
+	</div>
+</div>
+<script>bubbel('recept');</script>
+
+<div class="form-group">
+	<label class="control-label col-sm-2" for="frequentie">Onderdelen:</label>
+	<div class="col-sm-10">
+		<input type="frequentie" class="form-control" id="frequentie" /><br/>
+		<input type="periode" class="form-control" id="periode" /><br/>
+		<input type="hoeveelheid" class="form-control" id="hoeveelheid" />
+	</div>
+</div>
+<script>bubbel('frequentie'); bubbel('periode'); bubbel('hoeveelheid');</script>
+
+<div class="form-group">
+	<label class="control-label col-sm-2" for="adres">Adres:</label>
+	<div class="col-sm-10">
+		<input type="adres" data-lookup="/postcode-checker.php" class="form-control" id="adres" />
+	</div>
+</div>
+<script>bubbel('adres');</script>
+
+<div class="form-group">
+	<label class="control-label col-sm-2" for="wetsartikel">Wetsartikel:</label>
+	<div class="col-sm-10">
+		<input type="wetsartikel" class="form-control" id="wetsartikel" />
+	</div>
+</div>
+<script>bubbel('wetsartikel');</script>
+
+</form>
+
+<footer><a href="http://github.com/xltrace/bubbel.js">&copy; 2015-2016</a> (<a href="./LICENSE">Apache license</a>) &mdash; Sent fan Wy&aelig;rda (<a href="http://xltrace.nl/">XLtrace</a>).</footer>
+
+</body></html>
