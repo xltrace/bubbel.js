@@ -36,7 +36,7 @@ function bubbel(el){
 				$("#" + el + "_linkmenu").append( $("<!-- \n\t --"+">"), $('<li><a id="' + el + '_targeturl" class="with-one-button" style="width: -moz-calc(100% - 30px); width: -webkit-calc(100% - 30px); width: calc(100% - 30px); display: inline-block;"><span class="none"><i class="fa fa-fw fa-external-link disabled nocursor"></i></span> <span id="' + el + '_target"></span></a><a onClick="link_rebuild(\'' + el + '\', \'link\', \'\');" style="display: inline; float: right; text-align: right; "><i class="fa fa-trash" style="width: 16px;"></i></a></li>'));
 				$("#" + el + "_div0").append( $("<!-- \n\t --"+">"), $('<div></div>').attr('id', el+ "_div2").attr('class','btn-group'));
 				$("#" + el + "_div2").append( $("<!-- \n\t --"+">"), $('<input></input>').attr('class', document.getElementById(el).getAttribute('class') + ' form-control with-one-button both').attr('id', el + '_desc').attr('type','text').attr('placeholder','description').attr('required','true').attr('onChange',"link_rebuild('" + el + "', 'desc', this.value);"));
-				$("#" + el + "_div2").append( $("<!-- \n\t --"+">"), $('<button><i class="fa fa-fw fa-search"></i></button>').attr('data-toggle','dropdown').attr('onClick',"link_search('" + el + "');").attr('class','form-control icononly after dropdown-toggle'));
+				$("#" + el + "_div2").append( $("<!-- \n\t --"+">"), $('<button><i class="fa fa-fw fa-search"></i></button>').attr('data-toggle','dropdown').attr('onClick',(document.getElementById(el).getAttribute("data-search") == null ? "" : "link_search('" + el + "');" )).attr('class','form-control icononly after dropdown-toggle' + (document.getElementById(el).getAttribute('data-search') == null ? " disabled" : "") ));
 				$("#" + el + "_div2").append( $("<!-- \n\t --"+">"), $('<ul><li>empty</li></ul>').attr('id', el + '_searchresult').attr('class','dropdown-menu dropdown-search-menu') );
 				//document.getElementById(el).setAttribute('onChange',"link_populate('" + el + "');");
 				document.getElementById(el).setAttribute('type','hidden');
@@ -52,6 +52,8 @@ function bubbel(el){
 	}
 }
 function bubbel_addsub(el, value){
+	if(document.getElementById(el).form.getAttribute('id') == null){ document.getElementById(el).form.setAttribute('id', "form_" + el); }
+
 	var i = ( document.getElementById(el + "_div").getAttribute("data-counter") * 1);
 	//alert(el + ' = ' + value);
 	var obj = $('<input></input>').attr('id', el + '-' + i);
@@ -61,11 +63,14 @@ function bubbel_addsub(el, value){
 	//obj.addClass('multiple');
 	obj.attr('value', value);
 	obj.attr('type', (document.getElementById(el).getAttribute("data-type") ? document.getElementById(el).getAttribute("data-type") : document.getElementById(el).getAttribute("type") ) );
-	obj.attr('required', document.getElementById(el).getAttribute("required"));
-	obj.attr('disabled', document.getElementById(el).getAttribute("disabled"));
-	obj.attr('pattern', document.getElementById(el).getAttribute("pattern"));
-	obj.attr('data-category', document.getElementById(el).getAttribute("data-category"));
-	obj.attr('data-search', document.getElementById(el).getAttribute("data-search"));
+	if(document.getElementById(el).getAttribute('list')){ obj.attr('list', document.getElementById(el).getAttribute("list")); }
+	if(document.getElementById(el).getAttribute('required')){ obj.attr('required', document.getElementById(el).getAttribute("required")); }
+	if(document.getElementById(el).getAttribute('disabled')){ obj.attr('disabled', document.getElementById(el).getAttribute("disabled")); }
+	if(document.getElementById(el).getAttribute('readonly')){ obj.attr('readonly', document.getElementById(el).getAttribute("readonly")); }
+	if(document.getElementById(el).getAttribute('pattern')){ obj.attr('pattern', document.getElementById(el).getAttribute("pattern")); }
+	if(document.getElementById(el).getAttribute('data-category')){ obj.attr('data-category', document.getElementById(el).getAttribute("data-category")); }
+	if(document.getElementById(el).getAttribute('data-search')){ obj.attr('data-search', document.getElementById(el).getAttribute("data-search")); }
+	obj.attr('form', (document.getElementById(el).getAttribute("form") ? document.getElementById(el).getAttribute("form") : document.getElementById(el).form.getAttribute("id") ) );
 	$("#" + el + "_div").append( $('<li class="multiple-child"></li>').append($("<"+"!-- \n --"+">"), obj) , $("<"+"!-- \n --"+">") ); //$('<span class="multiple"></span>').append(obj)
 	document.getElementById(el + "_div").setAttribute("data-counter", i + 1);
 	bubbel(el + '-' + i);
