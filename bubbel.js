@@ -65,6 +65,7 @@ function bubbel_addsub(el, value){
 	obj.attr('disabled', document.getElementById(el).getAttribute("disabled"));
 	obj.attr('pattern', document.getElementById(el).getAttribute("pattern"));
 	obj.attr('data-category', document.getElementById(el).getAttribute("data-category"));
+	obj.attr('data-search', document.getElementById(el).getAttribute("data-search"));
 	$("#" + el + "_div").append( $('<li class="multiple-child"></li>').append($("<"+"!-- \n --"+">"), obj) , $("<"+"!-- \n --"+">") ); //$('<span class="multiple"></span>').append(obj)
 	document.getElementById(el + "_div").setAttribute("data-counter", i + 1);
 	bubbel(el + '-' + i);
@@ -124,13 +125,14 @@ function link_search(el){
 	var async = false;
 	var q = document.getElementById(el + '_desc').value;
 	var c = document.getElementById(el).getAttribute("data-category");
-	var url = "http://" + ( window.location.hostname.length > 0 ? window.location.hostname : "demographyofdemocracy.org") + "/source/tools/micro/search.php?q=" + q + (c.length > 0 ? "&c=" + c : "");
+	//var url = "http://" + ( window.location.hostname.length > 0 ? window.location.hostname : "demographyofdemocracy.org") + "/source/tools/micro/search.php?q=" + q + (c.length > 0 ? "&c=" + c : "");
+	var url = document.getElementById(el).getAttribute("data-search") + "?q=" + q + ( c.length > 0 ? "&c=" + c : "");
 	//alert(url);
 	//alert(window.location.hostname + '==' + /http:\/\/([^\/]+)/.exec(url)[1] );
 	if(q.length < 2){ var search = []; } //{"value":"empty","icon":"fa-undo","id":""}
 	else{
-		if(window.location.hostname == /http:\/\/([^\/]+)/.exec(url)[1] ){
-		//if(true){
+		//if(window.location.hostname == /http:\/\/([^\/]+)/.exec(url)[1] ){
+		if(true){
 			xmlhttp.open("GET", url, async);
 			xmlhttp.send(null); //Faalt wanneer de /url/ niet vanaf hetzelfde domein wordt opgevraagd!
 			var search = JSON.parse(xmlhttp.responseText);
