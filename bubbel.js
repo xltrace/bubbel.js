@@ -3,7 +3,7 @@ function bubbel(el){
 		document.getElementById(el).setAttribute("data-class", document.getElementById(el).getAttribute("class") );
 		document.getElementById(el).setAttribute("data-type", document.getElementById(el).getAttribute("type") );
 		$("<"+"!-- \n --"+">").insertAfter( document.getElementById(el) ); 
-		$('<button class="icononly form-control after" type="button"><i class="fa fa-fw fa-plus-square"></i></button>').attr('onClick',"bubbel_addsub('" + el + "', '');").insertAfter( document.getElementById(el) ); // 
+		$('<button class="icononly form-control after" type="button"><i class="fa fa-fw ' + (document.getElementById(el).getAttribute("icon-add") != null ? document.getElementById(el).getAttribute("icon-add") : 'fa-plus-square') + '"></i></button>').attr('onClick',"bubbel_addsub('" + el + "', '');").insertAfter( document.getElementById(el) ); // 
 		$('<ul id="' + el + '_div" data-counter="0" style="display: inline;" class="bubbel-multiple multiple"></ul>').insertAfter( document.getElementById(el) );
 		$("#" + el + "_div").append( $("<"+"!-- \n --"+">") );
 		document.getElementById(el).setAttribute("type", "hidden");
@@ -36,13 +36,13 @@ function bubbel(el){
 				//alert(el + " is LINK");
 				$('<div id="' + el + '_div0" style="display: inline;"></div>').attr('class','btn-group').insertAfter( document.getElementById(el) );
 				$("#" + el + "_div0").append( $("<!-- \n\t --"+">"), $('<div></div>').attr('id', el + '_div1').attr('class','btn-group').attr('style','display: inline;'));
-				$("#" + el + "_div1").append( $("<!-- \n\t --"+">"), $('<button><i class="fa fa-fw fa-link disabled"></i></button>').attr('id', el + '_linkbutton').attr('class','form-control icononly dropdown-toggle').attr('data-toggle','dropdown') );
+				$("#" + el + "_div1").append( $("<!-- \n\t --"+">"), $('<button><i class="fa fa-fw ' + (document.getElementById(el).getAttribute('icon-link') != null ? document.getElementById(el).getAttribute('icon-link') : 'fa-link') + ' disabled"></i></button>').attr('id', el + '_linkbutton').attr('class','form-control icononly dropdown-toggle').attr('data-toggle','dropdown') );
 				$("#" + el + "_div1").append( $("<!-- \n\t --"+">"), $('<ul></ul>').attr('id', el + '_linkmenu').attr('class','dropdown-menu dropdown-link-menu').attr('style','display: none; visibility: hidden;'));
 				$("#" + el + "_linkmenu").append( $("<!-- \n\t --"+">"), $('<li><a id="' + el + '_targeturl" class="with-one-button" style="width: -moz-calc(100% - 30px); width: -webkit-calc(100% - 30px); width: calc(100% - 30px); display: inline-block;"><span class="none"><i class="fa fa-fw fa-external-link disabled nocursor"></i></span> <span id="' + el + '_target"></span></a><a onClick="link_rebuild(\'' + el + '\', \'link\', \'\');" style="display: inline; float: right; text-align: right; "><i class="fa fa-trash" style="width: 16px;"></i></a></li>'));
 				$("#" + el + "_div0").append( $("<!-- \n\t --"+">"), $('<div></div>').attr('id', el+ "_div2").attr('class','btn-group'));
 				var inputtype = "text";
 				$("#" + el + "_div2").append( $("<!-- \n\t --"+">"), $('<input' + (document.getElementById(el).getAttribute("required") != null ? ' required="true"': '') + (document.getElementById(el).getAttribute("readonly") != null ? ' readonly="true"' : '') + (document.getElementById(el).getAttribute("disabled") != null ? ' disabled="true"' : '') + '></input>').attr('class', document.getElementById(el).getAttribute('class') + ' form-control with-one-button both').attr('id', el + '_desc').attr('type',inputtype).attr('placeholder',document.getElementById(el).getAttribute("placeholder")).attr('onChange',"link_rebuild('" + el + "', 'desc', this.value);"));
-				$("#" + el + "_div2").append( $("<!-- \n\t --"+">"), $('<button><i class="fa fa-fw fa-search"></i></button>').attr('data-toggle','dropdown').attr('onClick',(document.getElementById(el).getAttribute("data-search") == null ? "" : "link_search('" + el + "');" )).attr('class','form-control icononly after dropdown-toggle' + (document.getElementById(el).getAttribute('data-search') == null ? " disabled" : "") ));
+				$("#" + el + "_div2").append( $("<!-- \n\t --"+">"), $('<button><i class="fa fa-fw ' + (document.getElementById(el).getAttribute('icon-search') != null ? document.getElementById(el).getAttribute('icon-search') : 'fa-search') + '"></i></button>').attr('data-toggle','dropdown').attr('onClick',(document.getElementById(el).getAttribute("data-search") == null ? "" : "link_search('" + el + "');" )).attr('class','form-control icononly after dropdown-toggle' + (document.getElementById(el).getAttribute('data-search') == null ? " disabled" : "") ));
 				$("#" + el + "_div2").append( $("<!-- \n\t --"+">"), $('<ul><li>empty</li></ul>').attr('id', el + '_searchresult').attr('class','dropdown-menu dropdown-search-menu') );
 				//document.getElementById(el).setAttribute('onChange',"link_populate('" + el + "');");
 				document.getElementById(el).setAttribute('type','hidden');
@@ -76,6 +76,8 @@ function bubbel_addsub(el, value){
 	if(document.getElementById(el).getAttribute('pattern') != null){ obj.attr('pattern', document.getElementById(el).getAttribute("pattern")); }
 	if(document.getElementById(el).getAttribute('data-category') != null){ obj.attr('data-category', document.getElementById(el).getAttribute("data-category")); }
 	if(document.getElementById(el).getAttribute('data-search') != null){ obj.attr('data-search', document.getElementById(el).getAttribute("data-search")); }
+	if(document.getElementById(el).getAttribute('icon-link') != null){ obj.attr('icon-link', document.getElementById(el).getAttribute("icon-link")); }
+	if(document.getElementById(el).getAttribute('icon-search') != null){ obj.attr('icon-search', document.getElementById(el).getAttribute("icon-search") ); }
 	obj.attr('form', (document.getElementById(el).getAttribute("form") != null ? document.getElementById(el).getAttribute("form") : document.getElementById(el).form.getAttribute("id") ) );
 	$("#" + el + "_div").append( $('<li class="multiple-child"></li>').append($("<"+"!-- \n --"+">"), obj) , $("<"+"!-- \n --"+">") ); //$('<span class="multiple"></span>').append(obj)
 	document.getElementById(el + "_div").setAttribute("data-counter", i + 1);
