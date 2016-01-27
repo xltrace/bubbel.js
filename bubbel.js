@@ -24,6 +24,11 @@ function bubbel(el){
 		} else {
 			bubbel_addsub( el, document.getElementById(el).getAttribute("value") );
 		}
+		//#clean-up:
+		//document.getElementById(el).setAttribute("form", "bubbel_ignore"); //results in error because of document.getElementById(el).form object
+		//document.getElementById(el).parentNode.removeChild(document.getElementById(el));
+		//document.getElementById(el).outerHTML = '';
+		document.getElementById(el).setAttribute("name", "bubbel_ignore_" + document.getElementById(el).getAttribute("name"));
 	}
 	else {
 		switch(document.getElementById(el).getAttribute("type")){
@@ -150,7 +155,7 @@ function link_search(el){
 	var str = '';
 	if(search.length > 0){
 		for(var i = 0; i < search.length ; i++){
-			str = str + "<li><a onClick=\"link_rebuild('" + el + "', 'link', '" + search[i]['id'] + "');link_rebuild('" + el + "', 'desc', '" + search[i]['value'] + "');\"><i class=\"fa fa-fw " + search[i]['icon'] + "\"></i> " + search[i]['value'] + "</a></li>";
+			str = str + "<li><a onClick=\"link_rebuild('" + el + "', 'link', '" + search[i]['id'] + "');link_rebuild('" + el + "', 'desc', '" + (search[i]['TITLE'].length >0 ? search[i]['TITLE'] : search[i]['value'] ) + "');\"><i class=\"fa fa-fw " + search[i]['icon'] + "\"></i> " + (search[i]['TITLE'].length >0 ? search[i]['TITLE'] : search[i]['value'] ) + "</a></li>";
 		}
 	}
 	document.getElementById(el + '_searchresult').innerHTML = str;
