@@ -18,6 +18,7 @@
 			.taskpaper ul ul, .taskpaper ol ol, .taskpaper ul ol, .taskpaper ol ul { margin-left: 0; padding-left: 22px; }
 			.taskpaper ul li { list-style-type: none; margin-left: 0; min-height: 21px; }
 			.taskpaper ul li.note { margin-left: -22px; }
+			.taskpaper ul.root > li.note { margin-left: 0; }
 			.taskpaper .done > span.item { text-decoration: line-through; }
 			.taskpaper .note { font-weight: normal; font-style: italic; color: #777; }
 			.taskpaper .project { font-weight: bold; } .taskpaper .project ul { font-weight: normal; }
@@ -26,7 +27,9 @@
 			.taskpaper li.task.done:before, .taskpaper.editable li.task:hover:before { content: "\f05d"; font-family: FontAwesome; color: #999; text-decoration: none; display: inline-block; width: 22px; }
 			.taskpaper.editable li.task:hover:before, .taskpaper.editable li.task.done:hover:before { color: #966; }
 			.taskpaper.editable li.task:hover { cursor: pointer; }
-			.taskpaper li.task { margin-left: -22px !important; padding-left: -22px !important; }
+			.taskpaper li.task { margin-left: -22px; padding-left: -22px; }
+			.taskpaper ul.root > li.task { margin-left: 0; padding-left: 0; }
+			.taskpaper ul.root > ul.generic { margin-left: 22px; }
 			.taskpaper span.tag, .taskpaper tag { color: #933; }
 			.taskpaper span.tag:before, .taskpaper tag:before { content: "@"; font-weight: bold; color: #D99; }
 			.taskpaper span.tag > span.value, .taskpaper tag > value { visibility: hidden; }
@@ -41,11 +44,12 @@
 			.taskpaper li > span.tools a i.fa-bars { cursor: move; cursor: row-resize; cursor: ns-resize; }
 			.taskpaper li.project > span.tools a i.fa-bars { cursor: move; }
 			.taskpaper li > span.tools a i.fa-edit { cursor: text; }
-			.taskpaper li.project > span.tools a i.fa-check { visibility: hidden; display: none; }
+			.taskpaper li.project > span.tools a i.fa-check, .taskpaper li.empty > span.tools a i.fa-check, .taskpaper li.empty > span.tools a i.fa-edit { visibility: hidden; display: none; }
 			/* .taskpaper ul > li:hover { background: rgba(128,128,128,0.1); } */
 			
 			
-			.taskpaper ul.group { border: 1px solid #966; }
+			.taskpaper ul.group:hover {}
+			.taskpaper li.project:hover > ul.group { background-color: rgba(128,128,128,0.05); }
 			
 			.menu { width: 220px; float: right; margin: 0 10px 0 0; padding: 0; border: 1px solid #BBB; }
 			.menu li, .menu ul, .menu ol { list-style-type: none; margin: 0; padding: 3px; }
@@ -93,18 +97,22 @@
 			
 			<br/><br/>
 			
-		<textarea id="taskpaper_raw" class="taskpaper">Meterstanden:
+			<strong>Editor:</strong><br/>
+		<textarea id="taskpaper_raw" class="taskpaper tabable direct" onchange="$('#taskpaper').html( taskpaper_html_build(taskpaper_txt_analyse($('#taskpaper_raw').val())) );">Meterstanden:
 - Opnemen @deadline(now)
 	- Electra
 	- Water @done
 		- Druppels
 	iedere mogelijke keer</textarea>
 			
+			<br/>
 			<button onClick="taskpaper_txt_analyse($('#taskpaper_raw').val());">txt Analyse</button>
 			<button onClick="taskpaper_txt_build(taskpaper_txt_analyse($('#taskpaper_raw').val()));">txt2txt</button>
 			<button onClick="alert($('#taskpaper_raw').val().length);">txt length</button> 
 			<button onClick="$('#taskpaper').html( taskpaper_html_build(taskpaper_txt_analyse($('#taskpaper_raw').val())) );">txt2html</button>
 			<!-- /*$('#taskpaper').innerHTML = */  -->
+			
+			<!-- <br/><br/><div id="debug" class="taskpaper editable"></div> -->
 	
 	</div></center>
 	</body>
@@ -136,49 +144,73 @@
 			if( cmatch = db[i]['clean'].replace(/^(\s+)(.*)/gi, "$2") ){ db[i]['clean'] = cmatch; }
 			
 			if( db[i]['clean'].match(/^([-]\s)/i) ){ db[i]['type'] = 'task'; db[i]['clean'] = db[i]['clean'].replace(/^([-]\s)(.*)/g, "$2"); }
-			if( db[i]['clean'].match(/[:]\s*$/)){ db[i]['type'] = 'project'; db[i]['depth'] = db[i]['depth'] - 0.1; db[i]['clean'] = db[i]['clean'].replace(/^(.*)([:]\s*)$/g, "$1"); }
+			if( db[i]['clean'].match(/[:]\s*$/)){ db[i]['type'] = 'project'; /* db[i]['depth'] = db[i]['depth'] - 0.1; */ db[i]['clean'] = db[i]['clean'].replace(/^(.*)([:]\s*)$/g, "$1"); }
+			
+			if( db[i]['clean'].length == 0 || db[i]['clean'].match(/^\s*$/gi) ){ db[i]['type'] = 'empty'; }
 			
 			if( db[i]['clean'].match(/@done/i) ){ db[i]['done'] = true; }
 			
 			debug = debug + "\n" + i+"\t"+ db[i]['depth']+":" +db[i]['type'] + "\t" + db[i]['clean'];
 			//debug = debug + "\n" + i+ "\t" + lines[i];
 		}
-		alert( debug );
+		//alert( debug );
 		return db;
 	}
 	function taskpaper_html_build(db){
-		var html = null;
-		var previous = null;
-		var groupid = null; var groupparent = [];
-		var d = 0;
+		var cdepth = []; var maxdepth = 4; for(var a = -1; a <= maxdepth; a++){ cdepth[a] = null; } var cdstr = null;
+		var plevel = []; for(var a = 0; a <= maxdepth; a++){ plevel[a] = null; } var plstr = null;
+		
+		var uldb = []; uldb[null] = $('<ul id="ul-null" class="root"></ul>');
 		
 		for(var i = 0; i < db.length ; i++){
-			if( previous == null ){ d = Math.ceil(db[i]['depth']); }
-			else { d = ( db[i]['depth'] - db[previous]['depth'] ); }
 			
-			if(db[i]['type'] == 'project'){
-				groupparent[i] = groupid;
-				groupid = i;
+			if(maxdepth > Math.ceil(db[i]['depth'])){
+				for(var j = 0; j <= Math.ceil(db[i]['depth']); j++){
+					if(cdepth[j] === null || j === Math.ceil(db[i]['depth']) ){ cdepth[j] = i;}
+				}
+				for(var k = Math.ceil(db[i]['depth'])+1; k <= maxdepth; k++){ cdepth[k] = null; }
+				
+				/*detect project*/
+				if( db[i]['type'] == 'project' ){
+					plevel[ Math.ceil(db[i]['depth'])  ] = i;
+				}
+				/* exit detected project*/
+				for(var a = Math.ceil(db[i]['depth'])+1; a <= maxdepth; a++){ plevel[a] = null;}
+				
+				/*new line fix*/
+				if(db[i]['clean'].length == 0 || db[i]['clean'].match(/^\s*$/gi) ){
+					for(var a = -1; a <= maxdepth; a++){ cdepth[a] = null; plevel[a] = null; }
+					db[i]['type'] = 'empty';
+				}
+				/*debug*/ cdstr = null; for(var a = 0; a <= maxdepth; a++){ cdstr = (cdstr == null ? cdepth[-1] + ":" : cdstr + ";") + cdepth[a];}
+				/*debug*/ plstr = null; for(var a = 0; a <= maxdepth; a++){ plstr = (plstr == null ? ":" : plstr + ";") + plevel[a];}
 			}
-			else{ if(groupid != null ){ if( db[groupid]['depth'] > db[i]['depth'] || db[i]['clean'].length == 0 ){
-				groupid = null;
-				html = html + taskpaper_close_group_helper(groupid, db, groupparent);
-			}}}
+						
+			var item = $('<li class="' + db[i]['type'] + (db[i]['done'] ? ' done' : '') + '" depth="' + Math.ceil(db[i]['depth']) + '"></li>'); // id="li-' + i + '" parent="ul-' + cdepth[Math.ceil(db[i]['depth'])-1] + '" cdstr="' + cdstr + '" plstr="' + plstr + '"
+			item.append( $('<span class="item">' + db[i]['clean'] + '</span>') );
+			item.append( taskpaper_html_toolset('li-' + i) );
 			
-			html = (html == null ? "" : html + "\n") + ( d == 0 ? "" : ( d > 0 ? repeat('<ul>', d) : repeat('</ul>', d * -1 ) ) ) + '<li class="' + db[i]['type'] + (db[i]['done'] ? ' done' : '') + ' depth-' + Math.ceil(db[i]['depth']) + '"><span class="item">' + db[i]['clean'] + '</span>' + (groupid == i ? '<ul class="group">' :  '</li>');
+			if( db[i]['type'] == 'project' ){
+				uldb[ 'project-' + cdepth[Math.ceil(db[i]['depth'])] ] = $('<ul class="group" id="ul-project-' + cdepth[Math.ceil(db[i]['depth'])] + '"></ul>');
+				item.append( uldb[ 'project-' + cdepth[Math.ceil(db[i]['depth'])] ] );
+			}
 			
-			previous = i;
+			var m = 1;
+			if(typeof uldb[ cdepth[Math.ceil(db[i]['depth'])-m] ]  == 'undefined'){
+			//for(var m = 1; typeof uldb[ cdepth[Math.ceil(db[i]['depth'])-m] ]  == 'undefined'; m++){
+				uldb[ cdepth[Math.ceil(db[i]['depth'])-m] ] = $('<ul id="ul-' + cdepth[Math.ceil(db[i]['depth'])-m] + '" class="generic"></ul>');
+				var pm = (Math.ceil(db[i]['depth'])-(m+1) < -1 || typeof cdepth[Math.ceil(db[i]['depth'])-(m+1)] == 'undefined' ? null : (plevel[Math.ceil(db[i]['depth'])-m] == null || db[i]['type'] == 'project' ? cdepth[Math.ceil(db[i]['depth'])-(m+1)] : 'project-' + plevel[Math.ceil(db[i]['depth'])-m] ) );
+				uldb[ pm ].append(uldb[ cdepth[Math.ceil(db[i]['depth'])-m] ]);
+			}
+			
+			uldb[ (plevel[Math.ceil(db[i]['depth'])] == null || db[i]['type'] == 'project' ? cdepth[Math.ceil(db[i]['depth'])-1] : 'project-' + plevel[Math.ceil(db[i]['depth'])] ) ].append( item );
 		}
-		html = html + taskpaper_close_group_helper(groupid, db, groupparent); previous = groupid;
-		if(previous != null){ html = html + "\n" + repeat('</ul>', db[previous]['depth']); }
-		if(Math.ceil(db[0]['depth']) == 0 ){ html = "<ul>\n"  + html + "\n</ul>"; }
-		alert( html );
-		return html;	
+				
+		//$('#debug').html( uldb[null] ); alert(document.getElementById('debug').innerHTML);
+		return uldb[null];	
 	}
-	function taskpaper_close_group_helper(groupid, db, groupparent){
-		var html = '';
-		
-		html = html + '</ul ></li>';
+	function taskpaper_html_toolset(id){
+		var html = '<span class="tools"><a href="#"><i class="fa fa-fw fa-bars"></i></a><a href="#"><i class="fa fa-fw fa-edit"></i></a><a href="#"><i class="fa fa-fw fa-check"></i></a><a href="#"><i class="fa fa-fw fa-close"></i></a></span>';
 		return html;
 	}
 	function taskpaper_txt_build(db){
@@ -200,6 +232,31 @@
 		}
 		return result + pattern;
 	}
+	</script>
+	
+	<script>
+	$(document).delegate('.tabable', 'keydown', function(e) {
+	  var keyCode = e.keyCode || e.which;
+
+	  if (keyCode == 9) {
+		e.preventDefault();
+		var start = $(this).get(0).selectionStart;
+		var end = $(this).get(0).selectionEnd;
+
+		// set textarea value to: text before caret + tab + text after caret
+		$(this).val($(this).val().substring(0, start)
+					+ "\t"
+					+ $(this).val().substring(end));
+
+		// put caret at right position again
+		$(this).get(0).selectionStart =
+		$(this).get(0).selectionEnd = start + 1;
+	  }
+	});
+	$(document).delegate('.direct', 'keydown', function(e) {
+	  var keyCode = e.keyCode || e.which;
+	  $(this).change();
+	});
 	</script>
 	
 </html>
