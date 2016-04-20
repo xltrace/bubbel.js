@@ -10,9 +10,9 @@
 		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 		
 		<style>
-			#application { max-width: 750px; text-align: left; }
+			#application { max-width: 950px; text-align: left; }
 			
-			div.taskpaper, textarea.taskpaper { width: 100%; max-width: 500px; min-height: 200px; border: 1px solid rgba(128,128,128,0.4); margin: 0; padding: 7px; overflow-y: scroll; overflow-x: hidden; resize: none; }
+			div.taskpaper, textarea.taskpaper { width: 100%; max-width: 700px; min-height: 200px; border: 1px solid rgba(128,128,128,0.4); margin: 0; padding: 7px; overflow-y: scroll; overflow-x: hidden; resize: none; }
 			
 			.taskpaper ul, .taskpaper ol { padding-left: 0; margin: 0 0; }
 			.taskpaper ul ul, .taskpaper ol ol, .taskpaper ul ol, .taskpaper ol ul { margin-left: 0; padding-left: 22px; }
@@ -23,17 +23,17 @@
 			.taskpaper .note { font-weight: normal; font-style: italic; color: #777; }
 			.taskpaper .project { font-weight: bold; } .taskpaper .project ul { font-weight: normal; }
 			.taskpaper li.project > span.item:after { content: ":"; }
-			.taskpaper li.task:before, .taskpaper.editable li.task.done:hover:before { content: "\f10c"; font-family: FontAwesome; color: #999; text-decoration: none; display: inline-block; width: 22px; }
-			.taskpaper li.task.done:before, .taskpaper.editable li.task:hover:before { content: "\f05d"; font-family: FontAwesome; color: #999; text-decoration: none; display: inline-block; width: 22px; }
-			.taskpaper.editable li.task:hover:before, .taskpaper.editable li.task.done:hover:before { color: #966; }
-			.taskpaper.editable li.task:hover { cursor: pointer; }
+			.taskpaper li.task  > span.item:before, .taskpaper.editable li.task.done > span.item:hover:before { content: "\f10c"; font-family: FontAwesome; color: #999; text-decoration: none; display: inline-block; width: 22px; }
+			.taskpaper li.task.done > span.item:before, .taskpaper.editable li.task > span.item:hover:before { content: "\f05d"; font-family: FontAwesome; color: #999; text-decoration: none; display: inline-block; width: 22px; }
+			.taskpaper.editable li.task > span.item:hover:before, .taskpaper.editable li.task.done > span.item:hover:before { color: #966; }
+			.taskpaper.editable li.task > span.item:hover { cursor: pointer; }
 			.taskpaper li.task { margin-left: -22px; padding-left: -22px; }
 			.taskpaper ul.root > li.task { margin-left: 0; padding-left: 0; }
 			.taskpaper ul.root > ul.generic { margin-left: 22px; }
-			.taskpaper span.tag, .taskpaper tag { color: #933; }
-			.taskpaper span.tag:before, .taskpaper tag:before { content: "@"; font-weight: bold; color: #D99; }
-			.taskpaper span.tag > span.value, .taskpaper tag > value { visibility: hidden; }
-			.taskpaper span.tag:hover > span.value, .taskpaper tag:hover > value { visibility: visible; }
+			.taskpaper span.tag, .taskpaper tag { color: #933; font-weight: normal; }
+			.taskpaper span.tag:before, .taskpaper tag:before { content: "\20@"; width: 26px; font-weight: bold; color: #D99; }
+			.taskpaper span.tag > span.value, .taskpaper tag > value { visibility: hidden; display: none; }
+			.taskpaper span.tag:hover > span.value, .taskpaper tag:hover > value { visibility: visible; display: inherit; color: #99D; }
 			.taskpaper span.tag > span.value:before, .taskpaper tag > value:before { content: "("; font-weight: bold; color: #D99; }
 			.taskpaper span.tag > span.value:after, .taskpaper tag > value:after { content: ")"; font-weight: bold; color: #D99; }
 			.taskpaper span.tag.url, .taskpaper tag.url { cursor: alias; }
@@ -47,6 +47,7 @@
 			.taskpaper li.project > span.tools a i.fa-check, .taskpaper li.empty > span.tools a i.fa-check, .taskpaper li.empty > span.tools a i.fa-edit { visibility: hidden; display: none; }
 			/* .taskpaper ul > li:hover { background: rgba(128,128,128,0.1); } */
 			
+			.active { color: red; }
 			
 			.taskpaper ul.group:hover {}
 			.taskpaper li.project:hover > ul.group { background-color: rgba(128,128,128,0.05); }
@@ -81,7 +82,7 @@
 				<li><a href="#"><i class="fa fa-fw fa-folder-open-o"></i> Bestandenbeheer</a></li>
 			</ul>
 		</div>
-		<div id="taskpaper" class="taskpaper editable">
+		<div id="taskpaper" class="taskpaper editable sortable">
 			<ul>
 				<li class="project"><span class="item">Meterstanden</span> <span class="tools"><a href="#"><i class="fa fa-fw fa-bars"></i></a><a href="#"><i class="fa fa-fw fa-edit"></i></a><a href="#"><i class="fa fa-fw fa-check"></i></a><a href="#"><i class="fa fa-fw fa-close"></i></a></span>
 				<ul>
@@ -103,7 +104,29 @@
 	- Electra
 	- Water @done
 		- Druppels
-	iedere mogelijke keer</textarea>
+	iedere mogelijke keer
+			
+Taskpaper-app:
+Hieronder vind je de verschillende stadia
+txt>html:
+- txt_analyse @done(2016-04-19)
+- build @done(2016-04-19)
+- analyseer tags
+	- postfix tags @done(2016-04-20)
+	- urls
+- markdown
+	- bold
+	- italic
+	- underscore
+html>txt:
+- html_analyse
+- save
+html editor:
+- done @done(2016-04-20)
+- edit text item
+- move li
+- remove li
+			</textarea>
 			
 			<br/>
 			<button onClick="taskpaper_txt_analyse($('#taskpaper_raw').val());">txt Analyse</button>
@@ -138,17 +161,25 @@
 			db[i] = [];
 			/*default*/ db[i]['type'] = 'note'; 
 			db[i]['clean'] = lines[i];
+			db[i]['postfixtags'] = [];
 			//db[i]['raw'] = lines[i];
 						
 			db[i]['depth'] = 0; var dtab = lines[i].match(/^(\s+)/gi); if(dtab == null){ db[i]['depth'] = 0; } else { var dmatch = dtab[0].match(/[\t]/gi); db[i]['depth'] = (dmatch == null ? 0 : dmatch.length ); }
 			if( cmatch = db[i]['clean'].replace(/^(\s+)(.*)/gi, "$2") ){ db[i]['clean'] = cmatch; }
+			
+			if( db[i]['clean'].match(/@done/i) ){ db[i]['done'] = true; }
+			var q = 0;
+			while( db[i]['clean'].match(/[@][a-z]+([\(][^\)]+[\)])?\s*$/gi) ){
+				db[i]['postfixtags'][q] = {'tag': db[i]['clean'].replace(/(.*)[@]([a-z]+)([\(][^\)]+[\)])?\s*$/gi, "$2"), 'value': db[i]['clean'].replace(/(.*)[@]([a-z]+)([\(]([^\)]+)[\)])?\s*$/gi, "$4")};
+				q++;
+				db[i]['clean'] = db[i]['clean'].replace(/\s*[@][a-z]+([\(][^\)]+[\)])?\s*$/gi, "");
+			}
 			
 			if( db[i]['clean'].match(/^([-]\s)/i) ){ db[i]['type'] = 'task'; db[i]['clean'] = db[i]['clean'].replace(/^([-]\s)(.*)/g, "$2"); }
 			if( db[i]['clean'].match(/[:]\s*$/)){ db[i]['type'] = 'project'; /* db[i]['depth'] = db[i]['depth'] - 0.1; */ db[i]['clean'] = db[i]['clean'].replace(/^(.*)([:]\s*)$/g, "$1"); }
 			
 			if( db[i]['clean'].length == 0 || db[i]['clean'].match(/^\s*$/gi) ){ db[i]['type'] = 'empty'; }
 			
-			if( db[i]['clean'].match(/@done/i) ){ db[i]['done'] = true; }
 			
 			debug = debug + "\n" + i+"\t"+ db[i]['depth']+":" +db[i]['type'] + "\t" + db[i]['clean'];
 			//debug = debug + "\n" + i+ "\t" + lines[i];
@@ -186,12 +217,16 @@
 				/*debug*/ plstr = null; for(var a = 0; a <= maxdepth; a++){ plstr = (plstr == null ? ":" : plstr + ";") + plevel[a];}
 			}
 						
-			var item = $('<li class="' + db[i]['type'] + (db[i]['done'] ? ' done' : '') + '" depth="' + Math.ceil(db[i]['depth']) + '"></li>'); // id="li-' + i + '" parent="ul-' + cdepth[Math.ceil(db[i]['depth'])-1] + '" cdstr="' + cdstr + '" plstr="' + plstr + '"
-			item.append( $('<span class="item">' + db[i]['clean'] + '</span>') );
+			var item = $('<li class="' + db[i]['type'] + (db[i]['done'] ? ' done' : '') + '" id="li-' + i + '" depth="' + Math.ceil(db[i]['depth']) + '"></li>'); // parent="ul-' + cdepth[Math.ceil(db[i]['depth'])-1] + '" cdstr="' + cdstr + '" plstr="' + plstr + '"
+			item.append( $('<span class="item" ' + (db[i]['type'] == 'task' ? 'onClick="taskpaper_html_done_switch(\'li-' + i + '\');"' : '') + '>' + db[i]['clean'] + '</span>') );
+			for(var a = db[i]['postfixtags'].length-1; a >= 0; a--){
+				item.append( $('<tag>' + db[i]['postfixtags'][a]['tag'] + (db[i]['postfixtags'][a]['value'] ? '<value>' + db[i]['postfixtags'][a]['value'] + '</value>' : '') + '</tag>') );
+			}
 			item.append( taskpaper_html_toolset('li-' + i) );
 			
 			if( db[i]['type'] == 'project' ){
 				uldb[ 'project-' + cdepth[Math.ceil(db[i]['depth'])] ] = $('<ul class="group" id="ul-project-' + cdepth[Math.ceil(db[i]['depth'])] + '"></ul>');
+				//makesortable(uldb[ 'project-' + cdepth[Math.ceil(db[i]['depth'])] ]);
 				item.append( uldb[ 'project-' + cdepth[Math.ceil(db[i]['depth'])] ] );
 			}
 			
@@ -199,6 +234,7 @@
 			if(typeof uldb[ cdepth[Math.ceil(db[i]['depth'])-m] ]  == 'undefined'){
 			//for(var m = 1; typeof uldb[ cdepth[Math.ceil(db[i]['depth'])-m] ]  == 'undefined'; m++){
 				uldb[ cdepth[Math.ceil(db[i]['depth'])-m] ] = $('<ul id="ul-' + cdepth[Math.ceil(db[i]['depth'])-m] + '" class="generic"></ul>');
+				//makesortable( uldb[ cdepth[Math.ceil(db[i]['depth'])-m] ] );
 				var pm = (Math.ceil(db[i]['depth'])-(m+1) < -1 || typeof cdepth[Math.ceil(db[i]['depth'])-(m+1)] == 'undefined' ? null : (plevel[Math.ceil(db[i]['depth'])-m] == null || db[i]['type'] == 'project' ? cdepth[Math.ceil(db[i]['depth'])-(m+1)] : 'project-' + plevel[Math.ceil(db[i]['depth'])-m] ) );
 				uldb[ pm ].append(uldb[ cdepth[Math.ceil(db[i]['depth'])-m] ]);
 			}
@@ -207,19 +243,46 @@
 		}
 				
 		//$('#debug').html( uldb[null] ); alert(document.getElementById('debug').innerHTML);
+		
+		//makesortable(uldb[null]);
+		
 		return uldb[null];	
 	}
 	function taskpaper_html_toolset(id){
-		var html = '<span class="tools"><a href="#"><i class="fa fa-fw fa-bars"></i></a><a href="#"><i class="fa fa-fw fa-edit"></i></a><a href="#"><i class="fa fa-fw fa-check"></i></a><a href="#"><i class="fa fa-fw fa-close"></i></a></span>';
+		var html = '<span class="tools">'
+			+ '<a href="#"><i class="fa fa-fw fa-bars"></i></a>'
+			+ '<a href="#"><i class="fa fa-fw fa-edit"></i></a>'
+			+ '<a href="#" onClick="taskpaper_html_done_switch(\'' + id + '\');"><i class="fa fa-fw fa-check"></i></a>'
+			+ '<a href="#"><i class="fa fa-fw fa-close"></i></a>'
+			+ '</span>';
 		return html;
+	}
+	function taskpaper_html_done_switch(id){
+		//$('#'+id).toggleClass("done");
+		if($('#'+id).hasClass("done")){
+			$('#'+id).removeClass("done");
+			$('#'+id).html($('#'+id).html().replace(/<tag>done(<value>[^<]+<\/value>)?<\/tag>/i, ''));
+		}
+		else{
+			$('#'+id).addClass("done");
+			var doneval = taskpaper_get_default_done_value();
+			$('#'+id).html($('#'+id).html().replace(/<span class="tools">/i, '<tag>done' + (doneval == null ? '' : '<value>' + doneval + '</value>') + '</tag><span class="tools">'));
+		}
 	}
 	function taskpaper_txt_build(db){
 		var txt = null;
 		for(var i = 0; i < db.length ; i++){
-			txt = (txt == null ? "" : txt + "\n") + repeat("\t", db[i]['depth']) + (db[i]['type'] == 'task' ? "- " : "") + db[i]['clean'] + (db[i]['type'] == 'project' ? ":" : "");
+			var postfixtags = ''; for(var a = db[i]['postfixtags'].length-1; a >= 0; a--){ postfixtags = (postfixtags == null ? '' : postfixtags + ' ') + '@' + db[i]['postfixtags'][a]['tag'] + (db[i]['postfixtags'][a]['value'] ? '(' + db[i]['postfixtags'][a]['value'] + ')' : ''); }
+			txt = (txt == null ? "" : txt + "\n") + repeat("\t", db[i]['depth']) + (db[i]['type'] == 'task' ? "- " : "") + db[i]['clean'] + (db[i]['type'] == 'project' ? ":" : "") + postfixtags;
 		}
 		alert( txt + " (" + txt.length + ")" );
 		return txt;
+	}
+		
+	function taskpaper_get_default_done_value(){
+		//return null;
+		var d = new Date();
+		return d.toISOString().replace(/(.*)T(.*)/i, '$1');
 	}
 		
 	function repeat(pattern, count) {
@@ -233,6 +296,57 @@
 		return result + pattern;
 	}
 	</script>
+	
+	<!-- https://johnny.github.io/jquery-sortable/ -->
+	<!--
+	<script src="https://johnny.github.io/jquery-sortable/js/jquery-sortable.js"></script>
+	<script>
+		function makesortable(obj){
+			var oldContainer;
+			obj.sortable({
+				  group: 'nested',
+				  itemSelector: 'li',
+				  afterMove: function (placeholder, container) {
+					if(oldContainer != container){
+					  if(oldContainer)
+						oldContainer.el.removeClass("active");
+					  container.el.addClass("active");
+
+					  oldContainer = container;
+					}
+				  },
+				  onDrop: function ($item, container, _super) {
+					container.el.removeClass("active");
+					_super($item, container);
+				  }
+				});
+		}
+		$(function() {
+			//$("#taskpaper > ul").sortable();
+			makesortable( $("#taskpaper > ul") );
+		});
+	</script>
+	<style>
+	body.dragging, body.dragging * {
+	  cursor: move !important;
+	}
+
+	.dragged {
+	  position: absolute;
+	  opacity: 0.5;
+	  z-index: 2000;
+	}
+
+	ol.example li.placeholder {
+	  position: relative;
+	  /** More li styles **/
+	}
+	ol.example li.placeholder:before {
+	  position: absolute;
+	  /** Define arrowhead **/
+	}
+	</style>
+	-->
 	
 	<script>
 	$(document).delegate('.tabable', 'keydown', function(e) {
