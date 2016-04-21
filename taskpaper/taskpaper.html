@@ -20,7 +20,7 @@
 			.taskpaper ul li.removed { height: 0; visibility: hidden; display: none; }
 			.taskpaper ul li.note { margin-left: -22px; }
 			.taskpaper ul.root > li.note { margin-left: 0; }
-			.taskpaper .done > span.item { text-decoration: line-through; }
+			.taskpaper .done span.item { text-decoration: line-through; }
 			.taskpaper .note { font-weight: normal; font-style: italic; color: #777; }
 			.taskpaper .note em, em em { font-style: normal; }
 			.taskpaper .project { font-weight: bold; } .taskpaper .project ul { font-weight: normal; }
@@ -133,13 +133,14 @@ Hieronder vind je de verschillende stadia
 txt>html:
 - txt_analyse @done(2016-04-19)
 - build @done(2016-04-19)
-- analyseer tags
+- analyseer tags @done
 	- postfix tags @done(2016-04-20)
-	- urls
-- markdown
-	- bold
-	- italic
-	- underscore
+	- inline tags @done(2016-04-21)
+	- urls @done(2016-04-21)
+- markdown @done
+	- bold @done(2016-04-21)
+	- italic @done(2016-04-21)
+	- underscore @done(2016-04-21)
 html>txt:
 - html_analyse
 - save
@@ -147,7 +148,7 @@ html editor:
 - done @done(2016-04-20)
 - edit text item
 - move li
-- remove li
+- remove li @done(2016-04-21)
 			</textarea>
 			<br/>
 			    <label class="switch"><input id="switch_tabable" class="switch-input" type="checkbox" onChange="$('#taskpaper_raw').toggleClass('tabable');" /><span class="switch-label" data-on="Tab" data-off="none"></span><span class="switch-handle"></span></label>
@@ -306,21 +307,21 @@ html editor:
 		$('#'+id).html('').addClass('empty').addClass('removed');
 	}
 	function taskpaper_txt2html_pretty(str){
-		str = str.replace(/@([a-z_-]+)[\(]([^\)]+)[\)]/i, '<tag>$1<value>$2</value></tag>');
-		str = str.replace(/@([a-z_-]+)/i, '<tag>$1</tag>');
-		str = str.replace(/(\s)[\*]([^\*]+)[\*](\s)/i, '$1<strong>$2</strong>$3');
-		str = str.replace(/(\s)[\/]([^\/]+)[\/](\s)/i, '$1<em>$2</em>$3');
-		str = str.replace(/(\s)[_]([^\/]+)[_](\s)/i, '$1<u>$2</u>$3');
-		str = str.replace(/[\[]([^\]]+)[\]][\(]([^\)]+)[\)]/i, '<a href="$2">$1</a>');
+		while(str.match(/@([a-z_-]+)[\(]([^\)]+)[\)]/i)){ str = str.replace(/@([a-z_-]+)[\(]([^\)]+)[\)]/i, '<tag>$1<value>$2</value></tag>'); }
+		while(str.match(/@([a-z_-]+)/i)){ str = str.replace(/@([a-z_-]+)/i, '<tag>$1</tag>'); }
+		while(str.match(/(\s)[\*]([^\*]+)[\*](\s)/i)){ str = str.replace(/(\s)[\*]([^\*]+)[\*](\s)/i, '$1<strong>$2</strong>$3'); }
+		while(str.match(/(\s)[\/]([^\/]+)[\/](\s)/i)){ str = str.replace(/(\s)[\/]([^\/]+)[\/](\s)/i, '$1<em>$2</em>$3'); }
+		while(str.match(/(\s)[_]([^\/]+)[_](\s)/i)){ str = str.replace(/(\s)[_]([^\/]+)[_](\s)/i, '$1<u>$2</u>$3'); }
+		while(str.match(/[\[]([^\]]+)[\]][\(]([^\)]+)[\)]/i)){ str = str.replace(/[\[]([^\]]+)[\]][\(]([^\)]+)[\)]/i, '<a href="$2">$1</a>'); }
 		return str;
 	}
 	function taskpaper_html2txt_pretty(str){
-		str = str.replace(/<tag>([^<]+)<value>([^<]+)<\/value><\/tag>/i, '@$1($2)');
-		str = str.replace(/<tag>([^<]+)<\/tag>/i, '@$1');
-		str = str.replace(/<strong>([^<]+)<\/strong>/i, '*$1*');
-		str = str.replace(/<em>([^<]+)<\/em>/i, '/$1/');
-		str = str.replace(/<u>([^<]+)<\/u>/i, '_$1_');
-		str = str.replace(/<a href="([^"]+)">([^<]+)<\/a>/i, '[$2]($1)');
+		while(str.match(/<tag>([^<]+)<value>([^<]+)<\/value><\/tag>/i)){ str = str.replace(/<tag>([^<]+)<value>([^<]+)<\/value><\/tag>/i, '@$1($2)'); }
+		while(str.match(/<tag>([^<]+)<\/tag>/i)){ str = str.replace(/<tag>([^<]+)<\/tag>/i, '@$1'); }
+		while(str.match(/<strong>([^<]+)<\/strong>/i)){ str = str.replace(/<strong>([^<]+)<\/strong>/i, '*$1*'); }
+		while(str.match(/<em>([^<]+)<\/em>/i)){ str = str.replace(/<em>([^<]+)<\/em>/i, '/$1/'); }
+		while(str.match(/<u>([^<]+)<\/u>/i)){ str = str.replace(/<u>([^<]+)<\/u>/i, '_$1_'); }
+		while(str.match(/<a href="([^"]+)">([^<]+)<\/a>/i)){ str = str.replace(/<a href="([^"]+)">([^<]+)<\/a>/i, '[$2]($1)'); }
 		return str;
 	}
 	function taskpaper_txt_build(db){
