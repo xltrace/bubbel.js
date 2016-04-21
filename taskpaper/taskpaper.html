@@ -17,10 +17,12 @@
 			.taskpaper ul, .taskpaper ol { padding-left: 0; margin: 0 0; }
 			.taskpaper ul ul, .taskpaper ol ol, .taskpaper ul ol, .taskpaper ol ul { margin-left: 0; padding-left: 22px; }
 			.taskpaper ul li { list-style-type: none; margin-left: 0; min-height: 21px; }
+			.taskpaper ul li.removed { height: 0; visibility: hidden; display: none; }
 			.taskpaper ul li.note { margin-left: -22px; }
 			.taskpaper ul.root > li.note { margin-left: 0; }
 			.taskpaper .done > span.item { text-decoration: line-through; }
 			.taskpaper .note { font-weight: normal; font-style: italic; color: #777; }
+			.taskpaper .note em, em em { font-style: normal; }
 			.taskpaper .project { font-weight: bold; } .taskpaper .project ul { font-weight: normal; }
 			.taskpaper li.project > span.item:after { content: ":"; }
 			.taskpaper li.task  > span.item:before, .taskpaper.editable li.task.done > span.item:hover:before { content: "\f10c"; font-family: FontAwesome; color: #999; text-decoration: none; display: inline-block; width: 22px; }
@@ -31,16 +33,19 @@
 			.taskpaper ul.root > li.task { margin-left: 0; padding-left: 0; }
 			.taskpaper ul.root > ul.generic { margin-left: 22px; }
 			.taskpaper span.tag, .taskpaper tag { color: #933; font-weight: normal; }
+			.taskpaper span.tag > span.value, .taskpaper tag > value { color: #99D; }
 			.taskpaper span.tag:before, .taskpaper tag:before { content: "\20@"; width: 26px; font-weight: bold; color: #D99; }
-			.taskpaper span.tag > span.value, .taskpaper tag > value { visibility: hidden; display: none; }
-			.taskpaper span.tag:hover > span.value, .taskpaper tag:hover > value { visibility: visible; display: inherit; color: #99D; }
+			/* .taskpaper span.tag > span.value, .taskpaper tag > value { visibility: hidden; display: none; } */
+			.taskpaper span.tag:hover > span.value, .taskpaper tag:hover > value { visibility: visible; display: inherit; }
 			.taskpaper span.tag > span.value:before, .taskpaper tag > value:before { content: "("; font-weight: bold; color: #D99; }
 			.taskpaper span.tag > span.value:after, .taskpaper tag > value:after { content: ")"; font-weight: bold; color: #D99; }
 			.taskpaper span.tag.url, .taskpaper tag.url { cursor: alias; }
-			.taskpaper li > span.tools { visibility: hidden; float: right; }
+			.taskpaper li > span.tools, .non-taskpaper li > span.tools { visibility: hidden; float: right; }
 			.taskpaper li > span.tools a { color: #999; } .taskpaper li span.tools a:hover { color: #669; }
 			.taskpaper.editable li:hover > span.tools { visibility: visible; }
 			.taskpaper li > span.tools a { cursor: pointer; }
+			.taskpaper li:hover > span.tools a i.fa-bars { visibility: hidden; display: none; }
+			.taskpaper.sortable.editable li:hover > span.tools a i.fa-bars { visibility: visible; display: inherit; }
 			.taskpaper li > span.tools a i.fa-bars { cursor: move; cursor: row-resize; cursor: ns-resize; }
 			.taskpaper li.project > span.tools a i.fa-bars { cursor: move; }
 			.taskpaper li > span.tools a i.fa-edit { cursor: text; }
@@ -51,6 +56,9 @@
 			
 			.taskpaper ul.group:hover {}
 			.taskpaper li.project:hover > ul.group { background-color: rgba(128,128,128,0.05); }
+			
+			
+			.taskpaper.clean li.done, .taskpaper.clean span.tag { visibility: hidden; display: none; }
 			
 			.menu { width: 220px; float: right; margin: 0 10px 0 0; padding: 0; border: 1px solid #BBB; }
 			.menu li, .menu ul, .menu ol { list-style-type: none; margin: 0; padding: 3px; }
@@ -96,6 +104,20 @@
 			</ul>
 		</div>
 			
+			<br/>
+			    <label class="switch"><input id="switch_taskpaper" class="switch-input" type="checkbox" onChange="$('#taskpaper').toggleClass('taskpaper').toggleClass('non-taskpaper');" /><span class="switch-label" data-on="Taskpaper" data-off="HTML"></span><span class="switch-handle"></span></label>
+			    <label class="switch"><input id="switch_clean" class="switch-input" type="checkbox" onChange="$('#taskpaper').toggleClass('clean');" /><span class="switch-label" data-on="Clean" data-off="View All"></span><span class="switch-handle"></span></label>
+			    <label class="switch"><input id="switch_editable" class="switch-input" type="checkbox" onChange="$('#taskpaper').toggleClass('editable');" /><span class="switch-label" data-on="Editable" data-off="Fixed"></span><span class="switch-handle"></span></label>
+			    <label class="switch"><input id="switch_sortable" class="switch-input" type="checkbox" onChange="$('#taskpaper').toggleClass('sortable');" /><span class="switch-label" data-on="Sortable" data-off="Static"></span><span class="switch-handle"></span></label>
+				<script>
+					$(function(){
+						$('#switch_taskpaper').prop('checked', $('#taskpaper').hasClass('taskpaper') );
+						$('#switch_clean').prop('checked', $('#taskpaper').hasClass('clean') );
+						$('#switch_editable').prop('checked', $('#taskpaper').hasClass('editable') );
+						$('#switch_sortable').prop('checked', $('#taskpaper').hasClass('sortable') );
+					});
+				</script>
+			
 			<br/><br/>
 			
 			<strong>Editor:</strong><br/>
@@ -127,6 +149,15 @@ html editor:
 - move li
 - remove li
 			</textarea>
+			<br/>
+			    <label class="switch"><input id="switch_tabable" class="switch-input" type="checkbox" onChange="$('#taskpaper_raw').toggleClass('tabable');" /><span class="switch-label" data-on="Tab" data-off="none"></span><span class="switch-handle"></span></label>
+			    <label class="switch"><input id="switch_direct" class="switch-input" type="checkbox" onChange="$('#taskpaper_raw').toggleClass('direct');" /><span class="switch-label" data-on="Direct" data-off="passive"></span><span class="switch-handle"></span></label>
+				<script>
+					$(function(){
+						$('#switch_tabable').prop('checked', $('#taskpaper_raw').hasClass('tabable') );
+						$('#switch_direct').prop('checked', $('#taskpaper_raw').hasClass('direct') );
+					});
+				</script>
 			
 			<br/>
 			<button onClick="taskpaper_txt_analyse($('#taskpaper_raw').val());">txt Analyse</button>
@@ -169,10 +200,10 @@ html editor:
 			
 			if( db[i]['clean'].match(/@done/i) ){ db[i]['done'] = true; }
 			var q = 0;
-			while( db[i]['clean'].match(/[@][a-z]+([\(][^\)]+[\)])?\s*$/gi) ){
-				db[i]['postfixtags'][q] = {'tag': db[i]['clean'].replace(/(.*)[@]([a-z]+)([\(][^\)]+[\)])?\s*$/gi, "$2"), 'value': db[i]['clean'].replace(/(.*)[@]([a-z]+)([\(]([^\)]+)[\)])?\s*$/gi, "$4")};
+			while( db[i]['clean'].match(/[@][a-z_-]+([\(][^\)]+[\)])?\s*$/gi) ){
+				db[i]['postfixtags'][q] = {'tag': db[i]['clean'].replace(/(.*)[@]([a-z_-]+)([\(][^\)]+[\)])?\s*$/gi, "$2"), 'value': db[i]['clean'].replace(/(.*)[@]([a-z_-]+)([\(]([^\)]+)[\)])?\s*$/gi, "$4")};
 				q++;
-				db[i]['clean'] = db[i]['clean'].replace(/\s*[@][a-z]+([\(][^\)]+[\)])?\s*$/gi, "");
+				db[i]['clean'] = db[i]['clean'].replace(/\s*[@][a-z_-]+([\(][^\)]+[\)])?\s*$/gi, "");
 			}
 			
 			if( db[i]['clean'].match(/^([-]\s)/i) ){ db[i]['type'] = 'task'; db[i]['clean'] = db[i]['clean'].replace(/^([-]\s)(.*)/g, "$2"); }
@@ -218,11 +249,11 @@ html editor:
 			}
 						
 			var item = $('<li class="' + db[i]['type'] + (db[i]['done'] ? ' done' : '') + '" id="li-' + i + '" depth="' + Math.ceil(db[i]['depth']) + '"></li>'); // parent="ul-' + cdepth[Math.ceil(db[i]['depth'])-1] + '" cdstr="' + cdstr + '" plstr="' + plstr + '"
-			item.append( $('<span class="item" ' + (db[i]['type'] == 'task' ? 'onClick="taskpaper_html_done_switch(\'li-' + i + '\');"' : '') + '>' + db[i]['clean'] + '</span>') );
+			item.append( $('<span class="item" ' + (db[i]['type'] == 'task' ? 'onClick="taskpaper_html_done_switch(\'li-' + i + '\', $(\'#taskpaper\').hasClass(\'editable\'));"' : '') + '>' + taskpaper_txt2html_pretty( db[i]['clean'] ) + '</span>') );
 			for(var a = db[i]['postfixtags'].length-1; a >= 0; a--){
 				item.append( $('<tag>' + db[i]['postfixtags'][a]['tag'] + (db[i]['postfixtags'][a]['value'] ? '<value>' + db[i]['postfixtags'][a]['value'] + '</value>' : '') + '</tag>') );
 			}
-			item.append( taskpaper_html_toolset('li-' + i) );
+			item.append( taskpaper_html_toolset('li-' + i, 'taskpaper') );
 			
 			if( db[i]['type'] == 'project' ){
 				uldb[ 'project-' + cdepth[Math.ceil(db[i]['depth'])] ] = $('<ul class="group" id="ul-project-' + cdepth[Math.ceil(db[i]['depth'])] + '"></ul>');
@@ -248,26 +279,49 @@ html editor:
 		
 		return uldb[null];	
 	}
-	function taskpaper_html_toolset(id){
+	function taskpaper_html_toolset(id, robj){
 		var html = '<span class="tools">'
 			+ '<a href="#"><i class="fa fa-fw fa-bars"></i></a>'
 			+ '<a href="#"><i class="fa fa-fw fa-edit"></i></a>'
-			+ '<a href="#" onClick="taskpaper_html_done_switch(\'' + id + '\');"><i class="fa fa-fw fa-check"></i></a>'
-			+ '<a href="#"><i class="fa fa-fw fa-close"></i></a>'
+			+ '<a href="#" onClick="taskpaper_html_done_switch(\'' + id + '\', $(\'#' + (typeof robj != 'undefined' ? robj : 'null') + '\').hasClass(\'editable\'));"><i class="fa fa-fw fa-check"></i></a>'
+			+ '<a href="#" onClick="taskpaper_html_remove_li(\'' + id + '\');"><i class="fa fa-fw fa-close"></i></a>'
 			+ '</span>';
 		return html;
 	}
-	function taskpaper_html_done_switch(id){
-		//$('#'+id).toggleClass("done");
-		if($('#'+id).hasClass("done")){
-			$('#'+id).removeClass("done");
-			$('#'+id).html($('#'+id).html().replace(/<tag>done(<value>[^<]+<\/value>)?<\/tag>/i, ''));
+	function taskpaper_html_done_switch(id, editable){
+		if(editable == true || typeof editable == 'undefined'){
+			//$('#'+id).toggleClass("done");
+			if($('#'+id).hasClass("done")){
+				$('#'+id).removeClass("done");
+				$('#'+id).html($('#'+id).html().replace(/<tag>done(<value>[^<]+<\/value>)?<\/tag>/i, ''));
+			}
+			else{
+				$('#'+id).addClass("done");
+				var doneval = taskpaper_get_default_done_value();
+				$('#'+id).html($('#'+id).html().replace(/<span class="tools">/i, '<tag>done' + (doneval == null ? '' : '<value>' + doneval + '</value>') + '</tag><span class="tools">'));
+			}
 		}
-		else{
-			$('#'+id).addClass("done");
-			var doneval = taskpaper_get_default_done_value();
-			$('#'+id).html($('#'+id).html().replace(/<span class="tools">/i, '<tag>done' + (doneval == null ? '' : '<value>' + doneval + '</value>') + '</tag><span class="tools">'));
-		}
+	}
+	function taskpaper_html_remove_li(id){
+		$('#'+id).html('').addClass('empty').addClass('removed');
+	}
+	function taskpaper_txt2html_pretty(str){
+		str = str.replace(/@([a-z_-]+)[\(]([^\)]+)[\)]/i, '<tag>$1<value>$2</value></tag>');
+		str = str.replace(/@([a-z_-]+)/i, '<tag>$1</tag>');
+		str = str.replace(/(\s)[\*]([^\*]+)[\*](\s)/i, '$1<strong>$2</strong>$3');
+		str = str.replace(/(\s)[\/]([^\/]+)[\/](\s)/i, '$1<em>$2</em>$3');
+		str = str.replace(/(\s)[_]([^\/]+)[_](\s)/i, '$1<u>$2</u>$3');
+		str = str.replace(/[\[]([^\]]+)[\]][\(]([^\)]+)[\)]/i, '<a href="$2">$1</a>');
+		return str;
+	}
+	function taskpaper_html2txt_pretty(str){
+		str = str.replace(/<tag>([^<]+)<value>([^<]+)<\/value><\/tag>/i, '@$1($2)');
+		str = str.replace(/<tag>([^<]+)<\/tag>/i, '@$1');
+		str = str.replace(/<strong>([^<]+)<\/strong>/i, '*$1*');
+		str = str.replace(/<em>([^<]+)<\/em>/i, '/$1/');
+		str = str.replace(/<u>([^<]+)<\/u>/i, '_$1_');
+		str = str.replace(/<a href="([^"]+)">([^<]+)<\/a>/i, '[$2]($1)');
+		return str;
 	}
 	function taskpaper_txt_build(db){
 		var txt = null;
@@ -372,5 +426,108 @@ html editor:
 	  $(this).change();
 	});
 	</script>
+	
+	<style>
+    .switch {
+    	position: relative;
+    	display: inline-block;
+    	vertical-align: top;
+    	width: 100px;
+    	height: 30px;
+    	padding: 3px;
+    	margin: 0 10px 10px 0;
+    	background: linear-gradient(to bottom, #eeeeee, #FFFFFF 25px);
+    	background-image: -webkit-linear-gradient(top, #eeeeee, #FFFFFF 25px);
+    	border-radius: 18px;
+    	box-shadow: inset 0 -1px white, inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    	cursor: pointer;
+    }
+    .switch-input {
+    	position: absolute;
+    	top: 0;
+    	left: 0;
+    	opacity: 0;
+    }
+    .switch-label {
+    	position: relative;
+    	display: block;
+    	height: inherit;
+    	font-size: 10px;
+    	text-transform: uppercase;
+    	background: #eceeef;
+    	border-radius: inherit;
+    	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.15);
+    }
+    .switch-label:before, .switch-label:after {
+    	position: absolute;
+    	top: 50%;
+    	margin-top: -.5em;
+    	line-height: 1;
+    	-webkit-transition: inherit;
+    	-moz-transition: inherit;
+    	-o-transition: inherit;
+    	transition: inherit;
+    }
+    .switch-label:before {
+    	content: attr(data-off);
+    	right: 11px;
+    	color: #aaaaaa;
+    	text-shadow: 0 1px rgba(255, 255, 255, 0.5);
+    }
+    .switch-label:after {
+    	content: attr(data-on);
+    	left: 11px;
+    	color: #FFFFFF;
+    	text-shadow: 0 1px rgba(0, 0, 0, 0.2);
+    	opacity: 0;
+    }
+    .switch-input:checked ~ .switch-label {
+    	background: #E1B42B;
+    	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2);
+    }
+    .switch-input:checked ~ .switch-label:before {
+    	opacity: 0;
+    }
+    .switch-input:checked ~ .switch-label:after {
+    	opacity: 1;
+    }
+    .switch-handle {
+    	position: absolute;
+    	top: 4px;
+    	left: 4px;
+    	width: 28px;
+    	height: 28px;
+    	background: linear-gradient(to bottom, #FFFFFF 40%, #f0f0f0);
+    	background-image: -webkit-linear-gradient(top, #FFFFFF 40%, #f0f0f0);
+    	border-radius: 100%;
+    	box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+    }
+    .switch-handle:before {
+    	content: "";
+    	position: absolute;
+    	top: 50%;
+    	left: 50%;
+    	margin: -6px 0 0 -6px;
+    	width: 12px;
+    	height: 12px;
+    	background: linear-gradient(to bottom, #eeeeee, #FFFFFF);
+    	background-image: -webkit-linear-gradient(top, #eeeeee, #FFFFFF);
+    	border-radius: 6px;
+    	box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
+    }
+    .switch-input:checked ~ .switch-handle {
+    	left: 74px;
+    	box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
+    }
+     
+    /* Transition
+    ========================== */
+    .switch-label, .switch-handle {
+    	transition: All 0.3s ease;
+    	-webkit-transition: All 0.3s ease;
+    	-moz-transition: All 0.3s ease;
+    	-o-transition: All 0.3s ease;
+    }
+    </style>
 	
 </html>
