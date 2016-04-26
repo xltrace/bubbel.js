@@ -76,63 +76,36 @@
 		<div class="menu">
 			<ul>
 				<li><a href="#"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a></li>
-				<li><a href="#"><i class="fa fa-fw fa-calendar"></i> Calender</a></li>
-				<li><a href="#"><i class="fa fa-fw fa-bar-chart"></i> Rapporten</a></li>
+				<li><a href="#"><i class="fa fa-fw fa-calendar"></i> Calendar</a></li>
+				<li><a href="#"><i class="fa fa-fw fa-bar-chart"></i> Progress-Rapport</a></li>
 				<li class="divider"></li>
-				<li><a href="#"><i class="fa fa-fw fa-sitemap"></i> Projecten</a></li>
-				<li><a href="#"><i class="fa fa-fw fa-tasks"></i> Taken</a></li>
+				<li><a href="#"><i class="fa fa-fw fa-sitemap"></i> Projects</a></li>
+				<li><a href="#"><i class="fa fa-fw fa-tasks"></i> Tasks</a></li>
 					<li><a href="#"><i class="fa fa-fw fa-bell-o"></i> Tickets</a></li>
 				<li class="divider"></li>
-				<li><a href="#"><i class="fa fa-fw fa-users"></i> Contacten</a> <span>(Heracles+)</span></li>
-				<li><a href="#"><i class="fa fa-fw fa-comments-o"></i> Discussie</a> <span>(Echo)</span></li>
-				<li><a href="#"><i class="fa fa-fw fa-tags"></i> Labels</a> <span>(Tags)</span></li>
+				<li><a href="#"><i class="fa fa-fw fa-users"></i> Contacts</a> <span>(Heracles+)</span></li>
+				<li><a href="#"><i class="fa fa-fw fa-comments-o"></i> Discussion</a> <span>(Echo)</span></li>
+				<li><a href="#"><i class="fa fa-fw fa-tags"></i> Lables</a> <span>(Tags)</span></li>
 				<li class="divider"></li>
-				<li><a href="#"><i class="fa fa-fw fa-user"></i> Profiel</a> <span>(Heracles)</span></li>
-				<li><a href="#"><i class="fa fa-fw fa-gears"></i> Configuratie</a></li>
-				<li><a href="#"><i class="fa fa-fw fa-folder-open-o"></i> Bestandenbeheer</a></li>
+				<li><a href="#"><i class="fa fa-fw fa-user"></i> Profile</a> <span>(Heracles)</span></li>
+				<li><a href="#"><i class="fa fa-fw fa-gears"></i> Configuration</a></li>
+				<li><a href="#"><i class="fa fa-fw fa-folder-open-o"></i> Filesystem</a></li>
 			</ul>
 		</div>
-		<div id="taskpaper" class="taskpaper editable sortable">
-			<ul>
-				<li class="project"><span class="item">Meterstanden</span> <span class="tools"><a href="#"><i class="fa fa-fw fa-bars"></i></a><a href="#"><i class="fa fa-fw fa-edit"></i></a><a href="#"><i class="fa fa-fw fa-check"></i></a><a href="#"><i class="fa fa-fw fa-close"></i></a></span>
-				<ul>
-					<li class="task"><span class="item">Opnemen</span> <tag>deadline<value>now</value></tag> <span class="tools"><a href="#"><i class="fa fa-fw fa-bars"></i></a><a href="#"><i class="fa fa-fw fa-edit"></i></a><a href="#"><i class="fa fa-fw fa-check"></i></a><a href="#"><i class="fa fa-fw fa-close"></i></a></span></li>
-					<ul>
-						<li class="task"><span class="item">Electra</span> <span class="tools"><a href="#"><i class="fa fa-fw fa-bars"></i></a><a href="#"><i class="fa fa-fw fa-edit"></i></a><a href="#"><i class="fa fa-fw fa-check"></i></a><a href="#"><i class="fa fa-fw fa-close"></i></a></span></li>
-						<li class="task done"><span class="item">Water</span> <tag>done</tag> <span class="tools"><a href="#"><i class="fa fa-fw fa-bars"></i></a><a href="#"><i class="fa fa-fw fa-edit"></i></a><a href="#"><i class="fa fa-fw fa-check"></i></a><a href="#"><i class="fa fa-fw fa-close"></i></a></span></li>
-					</ul>
-					<li class="note"><span class="item">iedere mogelijke keer</span> <span class="tools"><a href="#"><i class="fa fa-fw fa-bars"></i></a><a href="#"><i class="fa fa-fw fa-edit"></i></a><a href="#"><i class="fa fa-fw fa-check"></i></a><a href="#"><i class="fa fa-fw fa-close"></i></a></span></li>
-				</ul></li>
-			</ul>
-		</div>
+		<div id="taskpaper" class="taskpaper editable sortable"></div>
 			
 			<br/>
 			    <label class="switch"><input id="switch_taskpaper" class="switch-input" type="checkbox" onChange="$('#taskpaper').toggleClass('taskpaper').toggleClass('non-taskpaper');" /><span class="switch-label" data-on="Taskpaper" data-off="HTML"></span><span class="switch-handle"></span></label>
 			    <label class="switch"><input id="switch_clean" class="switch-input" type="checkbox" onChange="$('#taskpaper').toggleClass('clean');" /><span class="switch-label" data-on="Clean" data-off="View All"></span><span class="switch-handle"></span></label>
 			    <label class="switch"><input id="switch_editable" class="switch-input" type="checkbox" onChange="$('#taskpaper').toggleClass('editable');" /><span class="switch-label" data-on="Editable" data-off="Fixed"></span><span class="switch-handle"></span></label>
 			    <label class="switch"><input id="switch_sortable" class="switch-input" type="checkbox" onChange="$('#taskpaper').toggleClass('sortable');" /><span class="switch-label" data-on="Sortable" data-off="Static"></span><span class="switch-handle"></span></label>
-				<script>
-					$(function(){
-						$('#switch_taskpaper').prop('checked', $('#taskpaper').hasClass('taskpaper') );
-						$('#switch_clean').prop('checked', $('#taskpaper').hasClass('clean') );
-						$('#switch_editable').prop('checked', $('#taskpaper').hasClass('editable') );
-						$('#switch_sortable').prop('checked', $('#taskpaper').hasClass('sortable') );
-					});
-				</script>
 			
 			<br/><br/>
 			
 			<strong>Editor:</strong><br/>
-		<textarea id="taskpaper_raw" class="taskpaper tabable direct" onchange="$('#taskpaper').html( taskpaper_html_build(taskpaper_txt_analyse($('#taskpaper_raw').val())) );">Meterstanden:
-- Opnemen @deadline(now)
-	- Electra
-	- Water @done
-		- Druppels
-	iedere mogelijke keer
-			
-Taskpaper-app:
-Hieronder vind je de verschillende stadia
-txt>html:
+		<textarea id="taskpaper_raw" class="taskpaper tabable direct" onchange="$('#taskpaper').html( taskpaper_html_build(taskpaper_txt_analyse($('#taskpaper_raw').val())) );">Taskpaper-app:
+Hieronder vind je de verschillende stadia die in de ontwikkeling van deze concept-app doorlopen dienen te gaan worden voordat er van een volwaardige applicatie sprake kan zijn.
+txt&gt;html: @done
 - txt_analyse @done(2016-04-19)
 - build @done(2016-04-19)
 - analyseer tags @done
@@ -143,32 +116,49 @@ txt>html:
 	- bold @done(2016-04-21)
 	- italic @done(2016-04-21)
 	- underscore @done(2016-04-21)
-html>txt:
+	- code backtick @done(2016-04-26)
+html&gt;txt:
 - html_analyse @done(2016-04-26;native js approach) @bug(2016-04-25;jQuery approach)
-- save
+- save / push-back to textarea
 html editor:
-- done @done(2016-04-20)
-- edit text item
-- move li
+- implement the `done` tag @done(2016-04-20)
+- edit text @icon(edit) of item
+- move @icon(bars) li @sortable
 - remove li @done(2016-04-21)
-			</textarea>
+- make the html keyboard aware
+	- use `[arrow up]` and   `[arrow down]` to select previous/next item
+	- change indentation of current item with `[tab]` and `[shift][tab]`
+- add child item on `[enter]`
+	- create item by @icon(plus-circle) form
+- change item type (/project/, /task/, /note/)
+- enable @icon(edit) WYSIWYG text editing on item lines
+	- implement /&lt;strong&gt;, &lt;em&gt;, &lt;u&gt;, &lt;code&gt;, &lt;a href=""&gt;, @icon, @tag /
+[bubble.js](http://xltrace.nl/bubbel.js/):
+- implement [.taskpaper] with /.editable/ and /.sortable/ e.g.
+Application:
+- [FSnode](#) filesystem layer
+	- write FSnode::dropbox and FSnode::google_drive @featurerequest
+- build *@icon(sitemap) projects*
+	- include taskpaper-files into a project
+	- define a project by adding @id(#) and enabling @project(#/name) references
+- implement standardized *@icon(tags) labels*.
+	Like @don(e{date=now}), with e.g. @created({date};{user}), @assigned({user}), @estimated({period}) and several @milestone({date}) tags.
+- remap the `{date}`-aware tags into the *@icon(calendar) calendar* as alternative view
+- add module for *@icon(comments-o) discussion*: "[Echo](#)" @featurerequest
+- implement a *@icon(bell-o) ticket*-system to a particular taskpaper document, with ability of adding the ticket from external contacts (by email-address) @featurerequest @require("Echo")
+	- with identification of real users @capcha @spamfilter
+- generate the @today , @urgent , and @tomorrow *@icon(tasks) task-views* @featurerequest
+- generate *@icon(bar-chart) progress-reports* @featurerequest</textarea>
 			<br/>
 			    <label class="switch"><input id="switch_tabable" class="switch-input" type="checkbox" onChange="$('#taskpaper_raw').toggleClass('tabable');" /><span class="switch-label" data-on="Tab" data-off="none"></span><span class="switch-handle"></span></label>
 			    <label class="switch"><input id="switch_direct" class="switch-input" type="checkbox" onChange="$('#taskpaper_raw').toggleClass('direct');" /><span class="switch-label" data-on="Direct" data-off="passive"></span><span class="switch-handle"></span></label>
-				<script>
-					$(function(){
-						$('#switch_tabable').prop('checked', $('#taskpaper_raw').hasClass('tabable') );
-						$('#switch_direct').prop('checked', $('#taskpaper_raw').hasClass('direct') );
-					});
-				</script>
 			
 			<br/>
-			<button onClick="taskpaper_txt_analyse($('#taskpaper_raw').val());">txt Analyse</button>
-			<button onClick="taskpaper_txt_build(taskpaper_txt_analyse($('#taskpaper_raw').val()));">txt2txt</button>
+			<button onClick="console.dir( taskpaper_txt_analyse($('#taskpaper_raw').val()) );">txt Analyse</button>
+			<button onClick="alert( taskpaper_txt_build(taskpaper_txt_analyse($('#taskpaper_raw').val())) );">txt2txt</button>
 			<button onClick="alert($('#taskpaper_raw').val().length);">txt length</button> 
 			<button onClick="$('#taskpaper').html( taskpaper_html_build(taskpaper_txt_analyse($('#taskpaper_raw').val())) );">txt2html</button>
-			<button onClick="alert(taskpaper_txt_build( taskpaper_html_analyse_jquery($('#taskpaper')) ));">html2txt (jquery)</button>
-			<button onClick="$('#taskpaper_raw').val(taskpaper_txt_build( taskpaper_html_analyse(document.getElementById('taskpaper')) ));">html2txt (js)</button>
+			<button onClick="$('#taskpaper_raw').val(taskpaper_txt_build( taskpaper_html_analyse(document.getElementById('taskpaper')) ));">html2txt</button>
 			<!-- /*$('#taskpaper').innerHTML = */  -->
 			
 			<!-- <br/><br/><div id="debug" class="taskpaper editable"></div> -->
@@ -213,7 +203,7 @@ html editor:
 				db[i]['postfixtags'] = [];
 					db[i]['clean'] = taskpaper_html2txt_tagpretty( obj.children[1].innerHTML );
 					db[i] = taskpaper_txt_analyse_tag(db[i], 'clean');
-				db[i]['clean'] = taskpaper_html2txt_pretty(taskpaper_html2txt_tagpretty( obj.children[0].innerText ));
+				db[i]['clean'] = taskpaper_html2txt_pretty(taskpaper_html2txt_tagpretty( obj.children[0].innerHTML ));
 				db[i]['depth'] = depth;
 				if(obj.className.match(/done/i)){ db[i]['done'] = true; }
 				
@@ -225,51 +215,6 @@ html editor:
 				break;
 		}
 		//if(first == true){ console.dir(obj); console.dir(db); }
-		return db;
-	}
-	function taskpaper_html_analyse_jquery(obj){
-		var debug = "";
-		var db = [];
-		db = taskpaper_html_analyse_jquery_helper(obj, db, -1);
-		console.dir(db);
-		return db;
-	}
-	function taskpaper_html_analyse_jquery_helper(obj, db, depth, i){
-		//if(typeof i == 'undefined'){ i = 0; }
-		var i = db.length;
-		if(typeof depth == 'undefined'){ depth = 0; }
-		
-		switch(obj.prop("tagName")){
-			case 'DIV':
-				db = taskpaper_html_analyse_helper(obj.find('> ul'), db, depth, i++);
-				break;
-			case 'UL':
-				/*bugreport: obj.class is not found in each UL, even when this is explicitly set */
-				db = taskpaper_html_analyse_helper(obj.find('> ul, > li'), db, (obj.prop("class").match(/group/i) || obj.hasClass('group') ? depth : depth+1), i++ );
-				break;
-			case 'LI':
-				if(typeof db[i] == 'undefined'){ db[i] = []; }
-				db[i]['id'] = i;
-				db[i]['type'] = obj.prop("class").replace(/^([^ ]+)(.*)/i, '$1');
-				db[i]['postfixtags'] = []; db[i]['clean'] = taskpaper_html2txt_tagpretty( obj.children('span.tags:first').html() ); db[i] = taskpaper_txt_analyse_tag(db[i], 'clean');
-				db[i]['clean'] = taskpaper_html2txt_pretty(taskpaper_html2txt_tagpretty( obj.children('span.item:first').text() ));
-				db[i]['depth'] = depth;
-				if(obj.prop("class").match(/done/i)){ db[i]['done'] = true; }
-				//console.dir(db);
-				//if( obj.find('> ul:first').length > 1 ){
-				if(obj.html().match(/<\/ul>/i)){
-					//db = taskpaper_html_analyse_helper($('> ul').find(obj), db, depth);
-					db = taskpaper_html_analyse_helper(obj.find('> ul:first'), db, depth, i++);
-				}
-				break;
-			default: 
-				//alert('unknown! ' + obj.prop("tagName"));
-		}
-		//if(obj.prop("tagName")){ alert(i + ": " + obj.prop("tagName") + "\tlength=" + obj.length + "\n" + obj.html() ); }
-		if(obj.prop("tagName")){
-			//db = taskpaper_html_analyse_helper(obj.next(), db, depth); //"ul, li" //nextUntil("ul", "ul, li")
-			db = taskpaper_html_analyse_helper(obj.find("+ li, + ul"), db, depth, i++); //$("+ ul, + li").find(obj)
-		}
 		return db;
 	}
 	function taskpaper_txt_analyse(blob){
@@ -349,7 +294,7 @@ html editor:
 			}
 						
 			var item = $('<li class="' + db[i]['type'] + (db[i]['done'] ? ' done' : '') + '" id="li-' + i + '" depth="' + Math.ceil(db[i]['depth']) + '"></li>'); // parent="ul-' + cdepth[Math.ceil(db[i]['depth'])-1] + '" cdstr="' + cdstr + '" plstr="' + plstr + '"
-			item.append( $('<span class="item" ' + (db[i]['type'] == 'task' ? 'onClick="taskpaper_html_done_switch(\'li-' + i + '\', $(\'#taskpaper\').hasClass(\'editable\'));"' : '') + '>' + taskpaper_txt2html_pretty(taskpaper_txt2html_tagpretty( db[i]['clean'] )) + '</span>') );
+			item.append( $('<span class="item" ' + (db[i]['type'] == 'task' ? 'onClick="taskpaper_html_done_switch(\'li-' + i + '\', $(\'#taskpaper\').hasClass(\'editable\'));"' : '') + '>' + taskpaper_txt2html_tagpretty(taskpaper_txt2html_pretty( db[i]['clean'] )) + '</span>') );
 			var tags = $('<span class="tags"></span>');
 			for(var a = db[i]['postfixtags'].length-1; a >= 0; a--){
 				tags.append( $('<tag><name>' + db[i]['postfixtags'][a]['tag'] + '</name>' + (db[i]['postfixtags'][a]['value'] ? '<value>' + db[i]['postfixtags'][a]['value'] + '</value>' : '') + '</tag>') );
@@ -416,10 +361,12 @@ html editor:
 		return str;
 	}
 	function taskpaper_txt2html_pretty(str){
-		while(str.match(/(\s)[\*]([^\*]+)[\*](\s)/i)){ str = str.replace(/(\s)[\*]([^\*]+)[\*](\s)/i, '$1<strong>$2</strong>$3'); }
-		while(str.match(/(\s)[\/]([^\/]+)[\/](\s)/i)){ str = str.replace(/(\s)[\/]([^\/]+)[\/](\s)/i, '$1<em>$2</em>$3'); }
-		while(str.match(/(\s)[_]([^\/]+)[_](\s)/i)){ str = str.replace(/(\s)[_]([^\/]+)[_](\s)/i, '$1<u>$2</u>$3'); }
+		while(str.match(/@icon\(([^\)]+)\)/i)){ str = str.replace(/@icon\(([^\)]+)\)/i, '<i class="fa fa-fw fa-$1"></i>'); }
+		while(str.match(/([\s\(\[\{])[\*]([^\*]+)[\*]/i)){ str = str.replace(/([\s\(\[\{])[\*]([^\*]+)[\*]/i, '$1<strong>$2</strong>'); }
+		while(str.match(/([\s\(\[\{])[\/]([^\/]+)[\/]/i)){ str = str.replace(/([\s\(\[\{])[\/]([^\/]+)[\/]/i, '$1<em>$2</em>'); }
+		while(str.match(/([\s\(\[\{])[_]([^\/]+)[_]/i)){ str = str.replace(/([\s\(\[\{])[_]([^\/]+)[_]/i, '$1<u>$2</u>'); }
 		while(str.match(/[\[]([^\]]+)[\]][\(]([^\)]+)[\)]/i)){ str = str.replace(/[\[]([^\]]+)[\]][\(]([^\)]+)[\)]/i, '<a href="$2">$1</a>'); }
+		while(str.match(/([\s\(\[\{])[`]([^`]+)[`]/i)){ str = str.replace(/([\s\(\[\{])[`]([^`]+)[`]/i, '$1<code>$2</code>'); }
 		return str;
 	}
 	function taskpaper_html2txt_tagpretty(str){
@@ -428,10 +375,12 @@ html editor:
 		return str;
 	}
 	function taskpaper_html2txt_pretty(str){
+		while(str.match(/<i class="fa fa-fw fa-([a-z]+)"><\/i>/i)){ str = str.replace(/<i class="fa fa-fw fa-([a-z]+)"><\/i>/i, '@icon($1)'); }
 		while(str.match(/<strong>([^<]+)<\/strong>/i)){ str = str.replace(/<strong>([^<]+)<\/strong>/i, '*$1*'); }
 		while(str.match(/<em>([^<]+)<\/em>/i)){ str = str.replace(/<em>([^<]+)<\/em>/i, '/$1/'); }
 		while(str.match(/<u>([^<]+)<\/u>/i)){ str = str.replace(/<u>([^<]+)<\/u>/i, '_$1_'); }
 		while(str.match(/<a href="([^"]+)">([^<]+)<\/a>/i)){ str = str.replace(/<a href="([^"]+)">([^<]+)<\/a>/i, '[$2]($1)'); }
+		while(str.match(/<code>([^<]+)<\/code>/i)){ str = str.replace(/<code>([^<]+)<\/code>/i, '`$1`'); }
 		return str;
 	}
 	function taskpaper_txt_build(db){
@@ -640,5 +589,18 @@ html editor:
     	-o-transition: All 0.3s ease;
     }
     </style>
+	<script>
+		/* moved to after loading jquery */
+		$(function(){
+			$('#switch_taskpaper').prop('checked', $('#taskpaper').hasClass('taskpaper') );
+			$('#switch_clean').prop('checked', $('#taskpaper').hasClass('clean') );
+			$('#switch_editable').prop('checked', $('#taskpaper').hasClass('editable') );
+			$('#switch_sortable').prop('checked', $('#taskpaper').hasClass('sortable') );
+			$('#switch_tabable').prop('checked', $('#taskpaper_raw').hasClass('tabable') );
+			$('#switch_direct').prop('checked', $('#taskpaper_raw').hasClass('direct') );
+			
+			$('#taskpaper').html( taskpaper_html_build(taskpaper_txt_analyse($('#taskpaper_raw').val())) );
+		});
+	</script>
 	
 </html>
