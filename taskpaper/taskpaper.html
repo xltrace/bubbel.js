@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 	<head>
 		<title></title>
@@ -27,6 +28,7 @@
 			.taskpaper li.project > span.item:after { content: ":"; }
 			.taskpaper li.task  > span.item:before, .taskpaper.editable li.task.done > span.item:hover:before { content: "\f10c"; font-family: FontAwesome; color: #999; text-decoration: none; display: inline-block; width: 22px; }
 			.taskpaper li.task.done > span.item:before, .taskpaper.editable li.task > span.item:hover:before { content: "\f05d"; font-family: FontAwesome; color: #999; text-decoration: none; display: inline-block; width: 22px; }
+			.taskpaper li.done li.task span.item:before { content: "\f05d"; font-family: FontAwesome; color: #999; text-decoration: none; display: inline-block; width: 22px; }
 			.taskpaper.editable li.task > span.item:hover:before, .taskpaper.editable li.task.done > span.item:hover:before { color: #966; }
 			.taskpaper.editable li.task > span.item:hover { cursor: pointer; }
 			.taskpaper li.task { margin-left: -22px; padding-left: -22px; }
@@ -142,7 +144,7 @@ txt>html:
 	- italic @done(2016-04-21)
 	- underscore @done(2016-04-21)
 html>txt:
-- html_analyse
+- html_analyse @done(2016-04-26;native js approach) @bug(2016-04-25;jQuery approach)
 - save
 html editor:
 - done @done(2016-04-20)
@@ -165,6 +167,8 @@ html editor:
 			<button onClick="taskpaper_txt_build(taskpaper_txt_analyse($('#taskpaper_raw').val()));">txt2txt</button>
 			<button onClick="alert($('#taskpaper_raw').val().length);">txt length</button> 
 			<button onClick="$('#taskpaper').html( taskpaper_html_build(taskpaper_txt_analyse($('#taskpaper_raw').val())) );">txt2html</button>
+			<button onClick="alert(taskpaper_txt_build( taskpaper_html_analyse_jquery($('#taskpaper')) ));">html2txt (jquery)</button>
+			<button onClick="$('#taskpaper_raw').val(taskpaper_txt_build( taskpaper_html_analyse(document.getElementById('taskpaper')) ));">html2txt (js)</button>
 			<!-- /*$('#taskpaper').innerHTML = */  -->
 			
 			<!-- <br/><br/><div id="debug" class="taskpaper editable"></div> -->
@@ -184,13 +188,97 @@ html editor:
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
 	<script language="JavaScript">
+	function taskpaper_html_analyse(obj, db, depth){
+		var first = false;
+		if(typeof db == 'undefined'){ db = []; first = true; }
+		var i = db.length;
+		if(typeof depth == 'undefined'){ depth = 0; first = true; }
+		
+		switch(obj.nodeName.toUpperCase()){
+			case 'DIV':
+				/*fix*/ if(first == true && depth == 0){ depth = -1; }
+				for(var a = 0; a < obj.children.length; a++){
+					db = taskpaper_html_analyse(obj.children[a], db, depth);
+				}
+				break;
+			case 'UL':
+				for(var a = 0; a < obj.children.length; a++){
+					db = taskpaper_html_analyse(obj.children[a], db, (obj.className.match(/group/i) ? depth : depth+1) );
+				}
+				break;
+			case 'LI':
+				if(typeof db[i] == 'undefined'){ db[i] = []; }
+				db[i]['id'] = i;
+				db[i]['type'] = obj.getAttribute("class").replace(/^([^ ]+)(.*)/i, '$1');
+				db[i]['postfixtags'] = [];
+					db[i]['clean'] = taskpaper_html2txt_tagpretty( obj.children[1].innerHTML );
+					db[i] = taskpaper_txt_analyse_tag(db[i], 'clean');
+				db[i]['clean'] = taskpaper_html2txt_pretty(taskpaper_html2txt_tagpretty( obj.children[0].innerText ));
+				db[i]['depth'] = depth;
+				if(obj.className.match(/done/i)){ db[i]['done'] = true; }
+				
+				for(var a = 0; a < obj.children.length; a++){
+					if(obj.children[a].nodeName.toUpperCase() == 'UL'){
+						db = taskpaper_html_analyse(obj.children[a], db, depth );
+					}
+				}
+				break;
+		}
+		//if(first == true){ console.dir(obj); console.dir(db); }
+		return db;
+	}
+	function taskpaper_html_analyse_jquery(obj){
+		var debug = "";
+		var db = [];
+		db = taskpaper_html_analyse_jquery_helper(obj, db, -1);
+		console.dir(db);
+		return db;
+	}
+	function taskpaper_html_analyse_jquery_helper(obj, db, depth, i){
+		//if(typeof i == 'undefined'){ i = 0; }
+		var i = db.length;
+		if(typeof depth == 'undefined'){ depth = 0; }
+		
+		switch(obj.prop("tagName")){
+			case 'DIV':
+				db = taskpaper_html_analyse_helper(obj.find('> ul'), db, depth, i++);
+				break;
+			case 'UL':
+				/*bugreport: obj.class is not found in each UL, even when this is explicitly set */
+				db = taskpaper_html_analyse_helper(obj.find('> ul, > li'), db, (obj.prop("class").match(/group/i) || obj.hasClass('group') ? depth : depth+1), i++ );
+				break;
+			case 'LI':
+				if(typeof db[i] == 'undefined'){ db[i] = []; }
+				db[i]['id'] = i;
+				db[i]['type'] = obj.prop("class").replace(/^([^ ]+)(.*)/i, '$1');
+				db[i]['postfixtags'] = []; db[i]['clean'] = taskpaper_html2txt_tagpretty( obj.children('span.tags:first').html() ); db[i] = taskpaper_txt_analyse_tag(db[i], 'clean');
+				db[i]['clean'] = taskpaper_html2txt_pretty(taskpaper_html2txt_tagpretty( obj.children('span.item:first').text() ));
+				db[i]['depth'] = depth;
+				if(obj.prop("class").match(/done/i)){ db[i]['done'] = true; }
+				//console.dir(db);
+				//if( obj.find('> ul:first').length > 1 ){
+				if(obj.html().match(/<\/ul>/i)){
+					//db = taskpaper_html_analyse_helper($('> ul').find(obj), db, depth);
+					db = taskpaper_html_analyse_helper(obj.find('> ul:first'), db, depth, i++);
+				}
+				break;
+			default: 
+				//alert('unknown! ' + obj.prop("tagName"));
+		}
+		//if(obj.prop("tagName")){ alert(i + ": " + obj.prop("tagName") + "\tlength=" + obj.length + "\n" + obj.html() ); }
+		if(obj.prop("tagName")){
+			//db = taskpaper_html_analyse_helper(obj.next(), db, depth); //"ul, li" //nextUntil("ul", "ul, li")
+			db = taskpaper_html_analyse_helper(obj.find("+ li, + ul"), db, depth, i++); //$("+ ul, + li").find(obj)
+		}
+		return db;
+	}
 	function taskpaper_txt_analyse(blob){
 		var debug = "";
 		var lines = blob.split("\n");
 		var clean = [];
 		var db = [];
 		for(var i = 0; i < lines.length ; i++){
-			db[i] = [];
+			if(typeof db[i] == 'undefined'){ db[i] = []; }
 			/*default*/ db[i]['type'] = 'note'; 
 			db[i]['clean'] = lines[i];
 			db[i]['postfixtags'] = [];
@@ -200,12 +288,13 @@ html editor:
 			if( cmatch = db[i]['clean'].replace(/^(\s+)(.*)/gi, "$2") ){ db[i]['clean'] = cmatch; }
 			
 			if( db[i]['clean'].match(/@done/i) ){ db[i]['done'] = true; }
-			var q = 0;
-			while( db[i]['clean'].match(/[@][a-z_-]+([\(][^\)]+[\)])?\s*$/gi) ){
-				db[i]['postfixtags'][q] = {'tag': db[i]['clean'].replace(/(.*)[@]([a-z_-]+)([\(][^\)]+[\)])?\s*$/gi, "$2"), 'value': db[i]['clean'].replace(/(.*)[@]([a-z_-]+)([\(]([^\)]+)[\)])?\s*$/gi, "$4")};
-				q++;
-				db[i]['clean'] = db[i]['clean'].replace(/\s*[@][a-z_-]+([\(][^\)]+[\)])?\s*$/gi, "");
-			}
+			//var q = 0;
+			//while( db[i]['clean'].match(/[@][a-z_-]+([\(][^\)]+[\)])?\s*$/gi) ){
+			//	db[i]['postfixtags'][q] = {'tag': db[i]['clean'].replace(/(.*)[@]([a-z_-]+)([\(][^\)]+[\)])?\s*$/gi, "$2"), 'value': db[i]['clean'].replace(/(.*)[@]([a-z_-]+)([\(]([^\)]+)[\)])?\s*$/gi, "$4")};
+			//	q++;
+			//	db[i]['clean'] = db[i]['clean'].replace(/\s*[@][a-z_-]+([\(][^\)]+[\)])?\s*$/gi, "");
+			//}
+			db[i] = taskpaper_txt_analyse_tag(db[i]);
 			
 			if( db[i]['clean'].match(/^([-]\s)/i) ){ db[i]['type'] = 'task'; db[i]['clean'] = db[i]['clean'].replace(/^([-]\s)(.*)/g, "$2"); }
 			if( db[i]['clean'].match(/[:]\s*$/)){ db[i]['type'] = 'project'; /* db[i]['depth'] = db[i]['depth'] - 0.1; */ db[i]['clean'] = db[i]['clean'].replace(/^(.*)([:]\s*)$/g, "$1"); }
@@ -218,6 +307,16 @@ html editor:
 		}
 		//alert( debug );
 		return db;
+	}
+	function taskpaper_txt_analyse_tag(obj, inp){
+		if(typeof inp == "undefined"){ var inp = 'clean'; }
+		var q = 0;
+		while( obj[inp].match(/[@][a-z_-]+([\(][^\)]+[\)])?\s*$/gi) ){
+			obj['postfixtags'][q] = {'tag': obj[inp].replace(/(.*)[@]([a-z_-]+)([\(][^\)]+[\)])?\s*$/gi, "$2"), 'value': obj[inp].replace(/(.*)[@]([a-z_-]+)([\(]([^\)]+)[\)])?\s*$/gi, "$4")};
+			q++;
+			obj[inp] = obj[inp].replace(/\s*[@][a-z_-]+([\(][^\)]+[\)])?\s*$/gi, "");
+		}
+		return obj;
 	}
 	function taskpaper_html_build(db){
 		var cdepth = []; var maxdepth = 4; for(var a = -1; a <= maxdepth; a++){ cdepth[a] = null; } var cdstr = null;
@@ -250,10 +349,12 @@ html editor:
 			}
 						
 			var item = $('<li class="' + db[i]['type'] + (db[i]['done'] ? ' done' : '') + '" id="li-' + i + '" depth="' + Math.ceil(db[i]['depth']) + '"></li>'); // parent="ul-' + cdepth[Math.ceil(db[i]['depth'])-1] + '" cdstr="' + cdstr + '" plstr="' + plstr + '"
-			item.append( $('<span class="item" ' + (db[i]['type'] == 'task' ? 'onClick="taskpaper_html_done_switch(\'li-' + i + '\', $(\'#taskpaper\').hasClass(\'editable\'));"' : '') + '>' + taskpaper_txt2html_pretty( db[i]['clean'] ) + '</span>') );
+			item.append( $('<span class="item" ' + (db[i]['type'] == 'task' ? 'onClick="taskpaper_html_done_switch(\'li-' + i + '\', $(\'#taskpaper\').hasClass(\'editable\'));"' : '') + '>' + taskpaper_txt2html_pretty(taskpaper_txt2html_tagpretty( db[i]['clean'] )) + '</span>') );
+			var tags = $('<span class="tags"></span>');
 			for(var a = db[i]['postfixtags'].length-1; a >= 0; a--){
-				item.append( $('<tag>' + db[i]['postfixtags'][a]['tag'] + (db[i]['postfixtags'][a]['value'] ? '<value>' + db[i]['postfixtags'][a]['value'] + '</value>' : '') + '</tag>') );
+				tags.append( $('<tag><name>' + db[i]['postfixtags'][a]['tag'] + '</name>' + (db[i]['postfixtags'][a]['value'] ? '<value>' + db[i]['postfixtags'][a]['value'] + '</value>' : '') + '</tag>') );
 			}
+			item.append( tags );
 			item.append( taskpaper_html_toolset('li-' + i, 'taskpaper') );
 			
 			if( db[i]['type'] == 'project' ){
@@ -294,30 +395,39 @@ html editor:
 			//$('#'+id).toggleClass("done");
 			if($('#'+id).hasClass("done")){
 				$('#'+id).removeClass("done");
-				$('#'+id).html($('#'+id).html().replace(/<tag>done(<value>[^<]+<\/value>)?<\/tag>/i, ''));
+				/* note: $('#'+id) also filters in-text @done-tags, instead of only $('#'+id+' > span.tags') */
+				$('#'+id).html($('#'+id).html().replace(/<tag><name>done<\/name>(<value>[^<]+<\/value>)?<\/tag>/i, ''));
 			}
 			else{
 				$('#'+id).addClass("done");
 				var doneval = taskpaper_get_default_done_value();
-				$('#'+id).html($('#'+id).html().replace(/<span class="tools">/i, '<tag>done' + (doneval == null ? '' : '<value>' + doneval + '</value>') + '</tag><span class="tools">'));
+				$('#'+id+' > span.tags').html($('#'+id+' > span.tags').html() + '<tag><name>done</name>' + (doneval == null ? '' : '<value>' + doneval + '</value>') + '</tag>');
 			}
 		}
+		//auto update html>txt
 	}
 	function taskpaper_html_remove_li(id){
 		$('#'+id).html('').addClass('empty').addClass('removed');
+		//auto update html>txt
+	}
+	function taskpaper_txt2html_tagpretty(str){
+		while(str.match(/@([a-z_-]+)[\(]([^\)]+)[\)]/i)){ str = str.replace(/@([a-z_-]+)[\(]([^\)]+)[\)]/i, '<tag><name>$1</name><value>$2</value></tag>'); }
+		while(str.match(/@([a-z_-]+)/i)){ str = str.replace(/@([a-z_-]+)/i, '<tag><name>$1</name></tag>'); }
+		return str;
 	}
 	function taskpaper_txt2html_pretty(str){
-		while(str.match(/@([a-z_-]+)[\(]([^\)]+)[\)]/i)){ str = str.replace(/@([a-z_-]+)[\(]([^\)]+)[\)]/i, '<tag>$1<value>$2</value></tag>'); }
-		while(str.match(/@([a-z_-]+)/i)){ str = str.replace(/@([a-z_-]+)/i, '<tag>$1</tag>'); }
 		while(str.match(/(\s)[\*]([^\*]+)[\*](\s)/i)){ str = str.replace(/(\s)[\*]([^\*]+)[\*](\s)/i, '$1<strong>$2</strong>$3'); }
 		while(str.match(/(\s)[\/]([^\/]+)[\/](\s)/i)){ str = str.replace(/(\s)[\/]([^\/]+)[\/](\s)/i, '$1<em>$2</em>$3'); }
 		while(str.match(/(\s)[_]([^\/]+)[_](\s)/i)){ str = str.replace(/(\s)[_]([^\/]+)[_](\s)/i, '$1<u>$2</u>$3'); }
 		while(str.match(/[\[]([^\]]+)[\]][\(]([^\)]+)[\)]/i)){ str = str.replace(/[\[]([^\]]+)[\]][\(]([^\)]+)[\)]/i, '<a href="$2">$1</a>'); }
 		return str;
 	}
+	function taskpaper_html2txt_tagpretty(str){
+		while(str.match(/<tag><name>([^<]+)<\/name><value>([^<]+)<\/value><\/tag>/i)){ str = str.replace(/<tag><name>([^<]+)<\/name><value>([^<]+)<\/value><\/tag>/i, '@$1($2)'); }
+		while(str.match(/<tag><name>([^<]+)<\/name><\/tag>/i)){ str = str.replace(/<tag><name>([^<]+)<\/name><\/tag>/i, '@$1'); }
+		return str;
+	}
 	function taskpaper_html2txt_pretty(str){
-		while(str.match(/<tag>([^<]+)<value>([^<]+)<\/value><\/tag>/i)){ str = str.replace(/<tag>([^<]+)<value>([^<]+)<\/value><\/tag>/i, '@$1($2)'); }
-		while(str.match(/<tag>([^<]+)<\/tag>/i)){ str = str.replace(/<tag>([^<]+)<\/tag>/i, '@$1'); }
 		while(str.match(/<strong>([^<]+)<\/strong>/i)){ str = str.replace(/<strong>([^<]+)<\/strong>/i, '*$1*'); }
 		while(str.match(/<em>([^<]+)<\/em>/i)){ str = str.replace(/<em>([^<]+)<\/em>/i, '/$1/'); }
 		while(str.match(/<u>([^<]+)<\/u>/i)){ str = str.replace(/<u>([^<]+)<\/u>/i, '_$1_'); }
@@ -328,9 +438,9 @@ html editor:
 		var txt = null;
 		for(var i = 0; i < db.length ; i++){
 			var postfixtags = ''; for(var a = db[i]['postfixtags'].length-1; a >= 0; a--){ postfixtags = (postfixtags == null ? '' : postfixtags + ' ') + '@' + db[i]['postfixtags'][a]['tag'] + (db[i]['postfixtags'][a]['value'] ? '(' + db[i]['postfixtags'][a]['value'] + ')' : ''); }
-			txt = (txt == null ? "" : txt + "\n") + repeat("\t", db[i]['depth']) + (db[i]['type'] == 'task' ? "- " : "") + db[i]['clean'] + (db[i]['type'] == 'project' ? ":" : "") + postfixtags;
+			txt = (txt == null ? "" : txt + "\n") + repeat("\t", db[i]['depth']) + (db[i]['type'] == 'task' ? "- " : "") + db[i]['clean'] + (db[i]['type'] == 'project' ? ":" : "") + postfixtags; // + (db[i]['done'] == true && postfixtags.match(/@done/i) != true ? " @done" : '')
 		}
-		alert( txt + " (" + txt.length + ")" );
+		//alert( txt + " (" + txt.length + ")" );
 		return txt;
 	}
 		
