@@ -1,0 +1,46 @@
+Taskpaper-app:
+Hieronder vind je de verschillende stadia die in de ontwikkeling van deze concept-app doorlopen dienen te gaan worden voordat er van een volwaardige applicatie sprake kan zijn.
+txt&gt;html: @done
+- txt_analyse @done(2016-04-19)
+- build @done(2016-04-19)
+- analyseer tags @done
+	- postfix tags @done(2016-04-20)
+	- inline tags @done(2016-04-21)
+	- urls @done(2016-04-21)
+- markdown @done
+	- bold @done(2016-04-21)
+	- italic @done(2016-04-21)
+	- underscore @done(2016-04-21)
+	- code backtick @done(2016-04-26)
+html&gt;txt:
+- html_analyse @done(2016-04-26;native js approach) @bug(2016-04-25;jQuery approach)
+- save / push-back to textarea
+html editor:
+- implement the `done` tag @done(2016-04-20)
+- edit text @icon(edit) of item
+- move @icon(bars) li @sortable
+- remove li @done(2016-04-21)
+- make the html keyboard aware
+	- use `[arrow up]` and   `[arrow down]` to select previous/next item
+	- change indentation of current item with `[tab]` and `[shift][tab]`
+- add child item on `[enter]`
+	- create item by @icon(plus-circle) form
+- change item type (/project/, /task/, /note/)
+- enable @icon(edit) WYSIWYG text editing on item lines
+	- implement `&lt;strong&gt;, &lt;em&gt;, &lt;u&gt;, &lt;code&gt;, &lt;a href=""&gt;, @icon, @tag `
+[bubble.js](http://xltrace.nl/bubbel.js/):
+- implement [.taskpaper] with /.editable/ and /.sortable/ e.g.
+&#941;&#961;&#947;&#959; Application:
+- [FSnode](#) filesystem layer
+	- write FSnode::dropbox and FSnode::google_drive @featurerequest
+- build *@icon(sitemap) projects*
+	- include taskpaper-files into a project
+	- define a project by adding @id(#) and enabling @project(#/name) references
+- implement standardized *@icon(tags) labels*.
+	Like @don(e{date=now}), with e.g. @created({date};{user}), @assigned({user}), @estimated({period}) and several @milestone({date}) tags.
+- remap the `{date}`-aware tags into the *@icon(calendar) calendar* as alternative view
+- add module for *@icon(comments-o) discussion*: "[Echo](#)" @featurerequest
+- implement a *@icon(bell-o) ticket*-system to a particular taskpaper document, with ability of adding the ticket from external contacts (by email-address) @featurerequest @require("Echo")
+	- with identification of real users @capcha @spamfilter
+- generate the @today , @urgent , and @tomorrow *@icon(tasks) task-views* @featurerequest
+- generate *@icon(bar-chart) progress-reports* @featurerequest

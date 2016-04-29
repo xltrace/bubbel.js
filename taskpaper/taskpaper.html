@@ -10,57 +10,15 @@
 		<!-- Font Awesome Icons -->
 		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 		
+		
+		<!-- Taskpaper Style -->
+		<link href="./taskpaper.css" rel="stylesheet" type="text/css" />
 		<style>
 			#application { max-width: 950px; text-align: left; }
 			
 			div.taskpaper, textarea.taskpaper { width: 100%; max-width: 700px; min-height: 200px; border: 1px solid rgba(128,128,128,0.4); margin: 0; padding: 7px; overflow-y: scroll; overflow-x: hidden; resize: none; }
 			
-			.taskpaper ul, .taskpaper ol { padding-left: 0; margin: 0 0; }
-			.taskpaper ul ul, .taskpaper ol ol, .taskpaper ul ol, .taskpaper ol ul { margin-left: 0; padding-left: 22px; }
-			.taskpaper ul li { list-style-type: none; margin-left: 0; min-height: 21px; }
-			.taskpaper ul li.removed { height: 0; visibility: hidden; display: none; }
-			.taskpaper ul li.note { margin-left: -22px; }
-			.taskpaper ul.root > li.note { margin-left: 0; }
-			.taskpaper .done span.item { text-decoration: line-through; }
-			.taskpaper .note { font-weight: normal; font-style: italic; color: #777; }
-			.taskpaper .note em, em em { font-style: normal; }
-			.taskpaper .project { font-weight: bold; } .taskpaper .project ul { font-weight: normal; }
-			.taskpaper li.project > span.item:after { content: ":"; }
-			.taskpaper li.task  > span.item:before, .taskpaper.editable li.task.done > span.item:hover:before { content: "\f10c"; font-family: FontAwesome; color: #999; text-decoration: none; display: inline-block; width: 22px; }
-			.taskpaper li.task.done > span.item:before, .taskpaper.editable li.task > span.item:hover:before { content: "\f05d"; font-family: FontAwesome; color: #999; text-decoration: none; display: inline-block; width: 22px; }
-			.taskpaper li.done li.task span.item:before { content: "\f05d"; font-family: FontAwesome; color: #999; text-decoration: none; display: inline-block; width: 22px; }
-			.taskpaper.editable li.task > span.item:hover:before, .taskpaper.editable li.task.done > span.item:hover:before { color: #966; }
-			.taskpaper.editable li.task > span.item:hover { cursor: pointer; }
-			.taskpaper li.task { margin-left: -22px; padding-left: -22px; }
-			.taskpaper ul.root > li.task { margin-left: 0; padding-left: 0; }
-			.taskpaper ul.root > ul.generic { margin-left: 22px; }
-			.taskpaper span.tag, .taskpaper tag { color: #933; font-weight: normal; }
-			.taskpaper span.tag > span.value, .taskpaper tag > value { color: #99D; }
-			.taskpaper span.tag:before, .taskpaper tag:before { content: "\20@"; width: 26px; font-weight: bold; color: #D99; }
-			/* .taskpaper span.tag > span.value, .taskpaper tag > value { visibility: hidden; display: none; } */
-			.taskpaper span.tag:hover > span.value, .taskpaper tag:hover > value { visibility: visible; display: inherit; }
-			.taskpaper span.tag > span.value:before, .taskpaper tag > value:before { content: "("; font-weight: bold; color: #D99; }
-			.taskpaper span.tag > span.value:after, .taskpaper tag > value:after { content: ")"; font-weight: bold; color: #D99; }
-			.taskpaper span.tag.url, .taskpaper tag.url { cursor: alias; }
-			.taskpaper li > span.tools, .non-taskpaper li > span.tools { visibility: hidden; float: right; }
-			.taskpaper li > span.tools a { color: #999; } .taskpaper li span.tools a:hover { color: #669; }
-			.taskpaper.editable li:hover > span.tools { visibility: visible; }
-			.taskpaper li > span.tools a { cursor: pointer; }
-			.taskpaper li:hover > span.tools a i.fa-bars { visibility: hidden; display: none; }
-			.taskpaper.sortable.editable li:hover > span.tools a i.fa-bars { visibility: visible; display: inherit; }
-			.taskpaper li > span.tools a i.fa-bars { cursor: move; cursor: row-resize; cursor: ns-resize; }
-			.taskpaper li.project > span.tools a i.fa-bars { cursor: move; }
-			.taskpaper li > span.tools a i.fa-edit { cursor: text; }
-			.taskpaper li.project > span.tools a i.fa-check, .taskpaper li.empty > span.tools a i.fa-check, .taskpaper li.empty > span.tools a i.fa-edit { visibility: hidden; display: none; }
-			/* .taskpaper ul > li:hover { background: rgba(128,128,128,0.1); } */
-			
 			.active { color: red; }
-			
-			.taskpaper ul.group:hover {}
-			.taskpaper li.project:hover > ul.group { background-color: rgba(128,128,128,0.05); }
-			
-			
-			.taskpaper.clean li.done, .taskpaper.clean span.tag { visibility: hidden; display: none; }
 			
 			.menu { width: 220px; float: right; margin: 0 10px 0 0; padding: 0; border: 1px solid #BBB; }
 			.menu li, .menu ul, .menu ol { list-style-type: none; margin: 0; padding: 3px; }
@@ -74,6 +32,7 @@
 	<body>
 		<center><div id="application">
 		<div class="menu">
+			<h3 style="text-align: center; text-shadow: 0 0 5px #BBB;">&#941;&#961;&#947;&#959; <!-- ergo --></h3>
 			<ul>
 				<li><a href="#"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a></li>
 				<li><a href="#"><i class="fa fa-fw fa-calendar"></i> Calendar</a></li>
@@ -132,10 +91,10 @@ html editor:
 	- create item by @icon(plus-circle) form
 - change item type (/project/, /task/, /note/)
 - enable @icon(edit) WYSIWYG text editing on item lines
-	- implement /&lt;strong&gt;, &lt;em&gt;, &lt;u&gt;, &lt;code&gt;, &lt;a href=""&gt;, @icon, @tag /
+	- implement `&lt;strong&gt;, &lt;em&gt;, &lt;u&gt;, &lt;code&gt;, &lt;a href=""&gt;, @icon, @tag `
 [bubble.js](http://xltrace.nl/bubbel.js/):
 - implement [.taskpaper] with /.editable/ and /.sortable/ e.g.
-Application:
+&#941;&#961;&#947;&#959; Application:
 - [FSnode](#) filesystem layer
 	- write FSnode::dropbox and FSnode::google_drive @featurerequest
 - build *@icon(sitemap) projects*
@@ -177,239 +136,7 @@ Application:
 	<!-- Bootstrap 3.3.6 JS -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
-	<script language="JavaScript">
-	function taskpaper_html_analyse(obj, db, depth){
-		var first = false;
-		if(typeof db == 'undefined'){ db = []; first = true; }
-		var i = db.length;
-		if(typeof depth == 'undefined'){ depth = 0; first = true; }
-		
-		switch(obj.nodeName.toUpperCase()){
-			case 'DIV':
-				/*fix*/ if(first == true && depth == 0){ depth = -1; }
-				for(var a = 0; a < obj.children.length; a++){
-					db = taskpaper_html_analyse(obj.children[a], db, depth);
-				}
-				break;
-			case 'UL':
-				for(var a = 0; a < obj.children.length; a++){
-					db = taskpaper_html_analyse(obj.children[a], db, (obj.className.match(/group/i) ? depth : depth+1) );
-				}
-				break;
-			case 'LI':
-				if(typeof db[i] == 'undefined'){ db[i] = []; }
-				db[i]['id'] = i;
-				db[i]['type'] = obj.getAttribute("class").replace(/^([^ ]+)(.*)/i, '$1');
-				db[i]['postfixtags'] = [];
-					db[i]['clean'] = taskpaper_html2txt_tagpretty( obj.children[1].innerHTML );
-					db[i] = taskpaper_txt_analyse_tag(db[i], 'clean');
-				db[i]['clean'] = taskpaper_html2txt_pretty(taskpaper_html2txt_tagpretty( obj.children[0].innerHTML ));
-				db[i]['depth'] = depth;
-				if(obj.className.match(/done/i)){ db[i]['done'] = true; }
-				
-				for(var a = 0; a < obj.children.length; a++){
-					if(obj.children[a].nodeName.toUpperCase() == 'UL'){
-						db = taskpaper_html_analyse(obj.children[a], db, depth );
-					}
-				}
-				break;
-		}
-		//if(first == true){ console.dir(obj); console.dir(db); }
-		return db;
-	}
-	function taskpaper_txt_analyse(blob){
-		var debug = "";
-		var lines = blob.split("\n");
-		var clean = [];
-		var db = [];
-		for(var i = 0; i < lines.length ; i++){
-			if(typeof db[i] == 'undefined'){ db[i] = []; }
-			/*default*/ db[i]['type'] = 'note'; 
-			db[i]['clean'] = lines[i];
-			db[i]['postfixtags'] = [];
-			//db[i]['raw'] = lines[i];
-						
-			db[i]['depth'] = 0; var dtab = lines[i].match(/^(\s+)/gi); if(dtab == null){ db[i]['depth'] = 0; } else { var dmatch = dtab[0].match(/[\t]/gi); db[i]['depth'] = (dmatch == null ? 0 : dmatch.length ); }
-			if( cmatch = db[i]['clean'].replace(/^(\s+)(.*)/gi, "$2") ){ db[i]['clean'] = cmatch; }
-			
-			if( db[i]['clean'].match(/@done/i) ){ db[i]['done'] = true; }
-			//var q = 0;
-			//while( db[i]['clean'].match(/[@][a-z_-]+([\(][^\)]+[\)])?\s*$/gi) ){
-			//	db[i]['postfixtags'][q] = {'tag': db[i]['clean'].replace(/(.*)[@]([a-z_-]+)([\(][^\)]+[\)])?\s*$/gi, "$2"), 'value': db[i]['clean'].replace(/(.*)[@]([a-z_-]+)([\(]([^\)]+)[\)])?\s*$/gi, "$4")};
-			//	q++;
-			//	db[i]['clean'] = db[i]['clean'].replace(/\s*[@][a-z_-]+([\(][^\)]+[\)])?\s*$/gi, "");
-			//}
-			db[i] = taskpaper_txt_analyse_tag(db[i]);
-			
-			if( db[i]['clean'].match(/^([-]\s)/i) ){ db[i]['type'] = 'task'; db[i]['clean'] = db[i]['clean'].replace(/^([-]\s)(.*)/g, "$2"); }
-			if( db[i]['clean'].match(/[:]\s*$/)){ db[i]['type'] = 'project'; /* db[i]['depth'] = db[i]['depth'] - 0.1; */ db[i]['clean'] = db[i]['clean'].replace(/^(.*)([:]\s*)$/g, "$1"); }
-			
-			if( db[i]['clean'].length == 0 || db[i]['clean'].match(/^\s*$/gi) ){ db[i]['type'] = 'empty'; }
-			
-			
-			debug = debug + "\n" + i+"\t"+ db[i]['depth']+":" +db[i]['type'] + "\t" + db[i]['clean'];
-			//debug = debug + "\n" + i+ "\t" + lines[i];
-		}
-		//alert( debug );
-		return db;
-	}
-	function taskpaper_txt_analyse_tag(obj, inp){
-		if(typeof inp == "undefined"){ var inp = 'clean'; }
-		var q = 0;
-		while( obj[inp].match(/[@][a-z_-]+([\(][^\)]+[\)])?\s*$/gi) ){
-			obj['postfixtags'][q] = {'tag': obj[inp].replace(/(.*)[@]([a-z_-]+)([\(][^\)]+[\)])?\s*$/gi, "$2"), 'value': obj[inp].replace(/(.*)[@]([a-z_-]+)([\(]([^\)]+)[\)])?\s*$/gi, "$4")};
-			q++;
-			obj[inp] = obj[inp].replace(/\s*[@][a-z_-]+([\(][^\)]+[\)])?\s*$/gi, "");
-		}
-		return obj;
-	}
-	function taskpaper_html_build(db){
-		var cdepth = []; var maxdepth = 4; for(var a = -1; a <= maxdepth; a++){ cdepth[a] = null; } var cdstr = null;
-		var plevel = []; for(var a = 0; a <= maxdepth; a++){ plevel[a] = null; } var plstr = null;
-		
-		var uldb = []; uldb[null] = $('<ul id="ul-null" class="root"></ul>');
-		
-		for(var i = 0; i < db.length ; i++){
-			
-			if(maxdepth > Math.ceil(db[i]['depth'])){
-				for(var j = 0; j <= Math.ceil(db[i]['depth']); j++){
-					if(cdepth[j] === null || j === Math.ceil(db[i]['depth']) ){ cdepth[j] = i;}
-				}
-				for(var k = Math.ceil(db[i]['depth'])+1; k <= maxdepth; k++){ cdepth[k] = null; }
-				
-				/*detect project*/
-				if( db[i]['type'] == 'project' ){
-					plevel[ Math.ceil(db[i]['depth'])  ] = i;
-				}
-				/* exit detected project*/
-				for(var a = Math.ceil(db[i]['depth'])+1; a <= maxdepth; a++){ plevel[a] = null;}
-				
-				/*new line fix*/
-				if(db[i]['clean'].length == 0 || db[i]['clean'].match(/^\s*$/gi) ){
-					for(var a = -1; a <= maxdepth; a++){ cdepth[a] = null; plevel[a] = null; }
-					db[i]['type'] = 'empty';
-				}
-				/*debug*/ cdstr = null; for(var a = 0; a <= maxdepth; a++){ cdstr = (cdstr == null ? cdepth[-1] + ":" : cdstr + ";") + cdepth[a];}
-				/*debug*/ plstr = null; for(var a = 0; a <= maxdepth; a++){ plstr = (plstr == null ? ":" : plstr + ";") + plevel[a];}
-			}
-						
-			var item = $('<li class="' + db[i]['type'] + (db[i]['done'] ? ' done' : '') + '" id="li-' + i + '" depth="' + Math.ceil(db[i]['depth']) + '"></li>'); // parent="ul-' + cdepth[Math.ceil(db[i]['depth'])-1] + '" cdstr="' + cdstr + '" plstr="' + plstr + '"
-			item.append( $('<span class="item" ' + (db[i]['type'] == 'task' ? 'onClick="taskpaper_html_done_switch(\'li-' + i + '\', $(\'#taskpaper\').hasClass(\'editable\'));"' : '') + '>' + taskpaper_txt2html_tagpretty(taskpaper_txt2html_pretty( db[i]['clean'] )) + '</span>') );
-			var tags = $('<span class="tags"></span>');
-			for(var a = db[i]['postfixtags'].length-1; a >= 0; a--){
-				tags.append( $('<tag><name>' + db[i]['postfixtags'][a]['tag'] + '</name>' + (db[i]['postfixtags'][a]['value'] ? '<value>' + db[i]['postfixtags'][a]['value'] + '</value>' : '') + '</tag>') );
-			}
-			item.append( tags );
-			item.append( taskpaper_html_toolset('li-' + i, 'taskpaper') );
-			
-			if( db[i]['type'] == 'project' ){
-				uldb[ 'project-' + cdepth[Math.ceil(db[i]['depth'])] ] = $('<ul class="group" id="ul-project-' + cdepth[Math.ceil(db[i]['depth'])] + '"></ul>');
-				//makesortable(uldb[ 'project-' + cdepth[Math.ceil(db[i]['depth'])] ]);
-				item.append( uldb[ 'project-' + cdepth[Math.ceil(db[i]['depth'])] ] );
-			}
-			
-			var m = 1;
-			if(typeof uldb[ cdepth[Math.ceil(db[i]['depth'])-m] ]  == 'undefined'){
-			//for(var m = 1; typeof uldb[ cdepth[Math.ceil(db[i]['depth'])-m] ]  == 'undefined'; m++){
-				uldb[ cdepth[Math.ceil(db[i]['depth'])-m] ] = $('<ul id="ul-' + cdepth[Math.ceil(db[i]['depth'])-m] + '" class="generic"></ul>');
-				//makesortable( uldb[ cdepth[Math.ceil(db[i]['depth'])-m] ] );
-				var pm = (Math.ceil(db[i]['depth'])-(m+1) < -1 || typeof cdepth[Math.ceil(db[i]['depth'])-(m+1)] == 'undefined' ? null : (plevel[Math.ceil(db[i]['depth'])-m] == null || db[i]['type'] == 'project' ? cdepth[Math.ceil(db[i]['depth'])-(m+1)] : 'project-' + plevel[Math.ceil(db[i]['depth'])-m] ) );
-				uldb[ pm ].append(uldb[ cdepth[Math.ceil(db[i]['depth'])-m] ]);
-			}
-			
-			uldb[ (plevel[Math.ceil(db[i]['depth'])] == null || db[i]['type'] == 'project' ? cdepth[Math.ceil(db[i]['depth'])-1] : 'project-' + plevel[Math.ceil(db[i]['depth'])] ) ].append( item );
-		}
-				
-		//$('#debug').html( uldb[null] ); alert(document.getElementById('debug').innerHTML);
-		
-		//makesortable(uldb[null]);
-		
-		return uldb[null];	
-	}
-	function taskpaper_html_toolset(id, robj){
-		var html = '<span class="tools">'
-			+ '<a href="#"><i class="fa fa-fw fa-bars"></i></a>'
-			+ '<a href="#"><i class="fa fa-fw fa-edit"></i></a>'
-			+ '<a href="#" onClick="taskpaper_html_done_switch(\'' + id + '\', $(\'#' + (typeof robj != 'undefined' ? robj : 'null') + '\').hasClass(\'editable\'));"><i class="fa fa-fw fa-check"></i></a>'
-			+ '<a href="#" onClick="taskpaper_html_remove_li(\'' + id + '\');"><i class="fa fa-fw fa-close"></i></a>'
-			+ '</span>';
-		return html;
-	}
-	function taskpaper_html_done_switch(id, editable){
-		if(editable == true || typeof editable == 'undefined'){
-			//$('#'+id).toggleClass("done");
-			if($('#'+id).hasClass("done")){
-				$('#'+id).removeClass("done");
-				/* note: $('#'+id) also filters in-text @done-tags, instead of only $('#'+id+' > span.tags') */
-				$('#'+id).html($('#'+id).html().replace(/<tag><name>done<\/name>(<value>[^<]+<\/value>)?<\/tag>/i, ''));
-			}
-			else{
-				$('#'+id).addClass("done");
-				var doneval = taskpaper_get_default_done_value();
-				$('#'+id+' > span.tags').html($('#'+id+' > span.tags').html() + '<tag><name>done</name>' + (doneval == null ? '' : '<value>' + doneval + '</value>') + '</tag>');
-			}
-		}
-		//auto update html>txt
-	}
-	function taskpaper_html_remove_li(id){
-		$('#'+id).html('').addClass('empty').addClass('removed');
-		//auto update html>txt
-	}
-	function taskpaper_txt2html_tagpretty(str){
-		while(str.match(/@([a-z_-]+)[\(]([^\)]+)[\)]/i)){ str = str.replace(/@([a-z_-]+)[\(]([^\)]+)[\)]/i, '<tag><name>$1</name><value>$2</value></tag>'); }
-		while(str.match(/@([a-z_-]+)/i)){ str = str.replace(/@([a-z_-]+)/i, '<tag><name>$1</name></tag>'); }
-		return str;
-	}
-	function taskpaper_txt2html_pretty(str){
-		while(str.match(/@icon\(([^\)]+)\)/i)){ str = str.replace(/@icon\(([^\)]+)\)/i, '<i class="fa fa-fw fa-$1"></i>'); }
-		while(str.match(/([\s\(\[\{])[\*]([^\*]+)[\*]/i)){ str = str.replace(/([\s\(\[\{])[\*]([^\*]+)[\*]/i, '$1<strong>$2</strong>'); }
-		while(str.match(/([\s\(\[\{])[\/]([^\/]+)[\/]/i)){ str = str.replace(/([\s\(\[\{])[\/]([^\/]+)[\/]/i, '$1<em>$2</em>'); }
-		while(str.match(/([\s\(\[\{])[_]([^\/]+)[_]/i)){ str = str.replace(/([\s\(\[\{])[_]([^\/]+)[_]/i, '$1<u>$2</u>'); }
-		while(str.match(/[\[]([^\]]+)[\]][\(]([^\)]+)[\)]/i)){ str = str.replace(/[\[]([^\]]+)[\]][\(]([^\)]+)[\)]/i, '<a href="$2">$1</a>'); }
-		while(str.match(/([\s\(\[\{])[`]([^`]+)[`]/i)){ str = str.replace(/([\s\(\[\{])[`]([^`]+)[`]/i, '$1<code>$2</code>'); }
-		return str;
-	}
-	function taskpaper_html2txt_tagpretty(str){
-		while(str.match(/<tag><name>([^<]+)<\/name><value>([^<]+)<\/value><\/tag>/i)){ str = str.replace(/<tag><name>([^<]+)<\/name><value>([^<]+)<\/value><\/tag>/i, '@$1($2)'); }
-		while(str.match(/<tag><name>([^<]+)<\/name><\/tag>/i)){ str = str.replace(/<tag><name>([^<]+)<\/name><\/tag>/i, '@$1'); }
-		return str;
-	}
-	function taskpaper_html2txt_pretty(str){
-		while(str.match(/<i class="fa fa-fw fa-([a-z]+)"><\/i>/i)){ str = str.replace(/<i class="fa fa-fw fa-([a-z]+)"><\/i>/i, '@icon($1)'); }
-		while(str.match(/<strong>([^<]+)<\/strong>/i)){ str = str.replace(/<strong>([^<]+)<\/strong>/i, '*$1*'); }
-		while(str.match(/<em>([^<]+)<\/em>/i)){ str = str.replace(/<em>([^<]+)<\/em>/i, '/$1/'); }
-		while(str.match(/<u>([^<]+)<\/u>/i)){ str = str.replace(/<u>([^<]+)<\/u>/i, '_$1_'); }
-		while(str.match(/<a href="([^"]+)">([^<]+)<\/a>/i)){ str = str.replace(/<a href="([^"]+)">([^<]+)<\/a>/i, '[$2]($1)'); }
-		while(str.match(/<code>([^<]+)<\/code>/i)){ str = str.replace(/<code>([^<]+)<\/code>/i, '`$1`'); }
-		return str;
-	}
-	function taskpaper_txt_build(db){
-		var txt = null;
-		for(var i = 0; i < db.length ; i++){
-			var postfixtags = ''; for(var a = db[i]['postfixtags'].length-1; a >= 0; a--){ postfixtags = (postfixtags == null ? '' : postfixtags + ' ') + '@' + db[i]['postfixtags'][a]['tag'] + (db[i]['postfixtags'][a]['value'] ? '(' + db[i]['postfixtags'][a]['value'] + ')' : ''); }
-			txt = (txt == null ? "" : txt + "\n") + repeat("\t", db[i]['depth']) + (db[i]['type'] == 'task' ? "- " : "") + db[i]['clean'] + (db[i]['type'] == 'project' ? ":" : "") + postfixtags; // + (db[i]['done'] == true && postfixtags.match(/@done/i) != true ? " @done" : '')
-		}
-		//alert( txt + " (" + txt.length + ")" );
-		return txt;
-	}
-		
-	function taskpaper_get_default_done_value(){
-		//return null;
-		var d = new Date();
-		return d.toISOString().replace(/(.*)T(.*)/i, '$1');
-	}
-		
-	function repeat(pattern, count) {
-		count = Math.ceil(count);
-		if (count < 1) return '';
-		var result = '';
-		while (count > 1) {
-			if (count & 1) result += pattern;
-			count >>= 1, pattern += pattern;
-		}
-		return result + pattern;
-	}
-	</script>
+	<script src="./taskpaper.js"></script>
 	
 	<!-- https://johnny.github.io/jquery-sortable/ -->
 	<!--
@@ -486,109 +213,8 @@ Application:
 	  $(this).change();
 	});
 	</script>
-	
-	<style>
-    .switch {
-    	position: relative;
-    	display: inline-block;
-    	vertical-align: top;
-    	width: 100px;
-    	height: 30px;
-    	padding: 3px;
-    	margin: 0 10px 10px 0;
-    	background: linear-gradient(to bottom, #eeeeee, #FFFFFF 25px);
-    	background-image: -webkit-linear-gradient(top, #eeeeee, #FFFFFF 25px);
-    	border-radius: 18px;
-    	box-shadow: inset 0 -1px white, inset 0 1px 1px rgba(0, 0, 0, 0.05);
-    	cursor: pointer;
-    }
-    .switch-input {
-    	position: absolute;
-    	top: 0;
-    	left: 0;
-    	opacity: 0;
-    }
-    .switch-label {
-    	position: relative;
-    	display: block;
-    	height: inherit;
-    	font-size: 10px;
-    	text-transform: uppercase;
-    	background: #eceeef;
-    	border-radius: inherit;
-    	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.15);
-    }
-    .switch-label:before, .switch-label:after {
-    	position: absolute;
-    	top: 50%;
-    	margin-top: -.5em;
-    	line-height: 1;
-    	-webkit-transition: inherit;
-    	-moz-transition: inherit;
-    	-o-transition: inherit;
-    	transition: inherit;
-    }
-    .switch-label:before {
-    	content: attr(data-off);
-    	right: 11px;
-    	color: #aaaaaa;
-    	text-shadow: 0 1px rgba(255, 255, 255, 0.5);
-    }
-    .switch-label:after {
-    	content: attr(data-on);
-    	left: 11px;
-    	color: #FFFFFF;
-    	text-shadow: 0 1px rgba(0, 0, 0, 0.2);
-    	opacity: 0;
-    }
-    .switch-input:checked ~ .switch-label {
-    	background: #E1B42B;
-    	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2);
-    }
-    .switch-input:checked ~ .switch-label:before {
-    	opacity: 0;
-    }
-    .switch-input:checked ~ .switch-label:after {
-    	opacity: 1;
-    }
-    .switch-handle {
-    	position: absolute;
-    	top: 4px;
-    	left: 4px;
-    	width: 28px;
-    	height: 28px;
-    	background: linear-gradient(to bottom, #FFFFFF 40%, #f0f0f0);
-    	background-image: -webkit-linear-gradient(top, #FFFFFF 40%, #f0f0f0);
-    	border-radius: 100%;
-    	box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
-    }
-    .switch-handle:before {
-    	content: "";
-    	position: absolute;
-    	top: 50%;
-    	left: 50%;
-    	margin: -6px 0 0 -6px;
-    	width: 12px;
-    	height: 12px;
-    	background: linear-gradient(to bottom, #eeeeee, #FFFFFF);
-    	background-image: -webkit-linear-gradient(top, #eeeeee, #FFFFFF);
-    	border-radius: 6px;
-    	box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
-    }
-    .switch-input:checked ~ .switch-handle {
-    	left: 74px;
-    	box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
-    }
-     
-    /* Transition
-    ========================== */
-    .switch-label, .switch-handle {
-    	transition: All 0.3s ease;
-    	-webkit-transition: All 0.3s ease;
-    	-moz-transition: All 0.3s ease;
-    	-o-transition: All 0.3s ease;
-    }
-    </style>
+		
+	<link href="./switch.css" rel="stylesheet" type="text/css" />
 	<script>
 		/* moved to after loading jquery */
 		$(function(){

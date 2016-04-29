@@ -1,0 +1,52 @@
+
+.taskpaper ul, .taskpaper ol { padding-left: 0; margin: 0 0; }
+.taskpaper ul ul, .taskpaper ol ol, .taskpaper ul ol, .taskpaper ol ul { margin-left: 0; padding-left: 22px; }
+.taskpaper ul li { list-style-type: none; margin-left: 0; min-height: 21px; }
+.taskpaper ul li.removed { height: 0; visibility: hidden; display: none; }
+.taskpaper ul li.note { margin-left: -22px; }
+.taskpaper ul.root > li.note { margin-left: 0; }
+.taskpaper .done span.item { text-decoration: line-through; }
+.taskpaper .note { font-weight: normal; font-style: italic; color: #777; }
+.taskpaper .note em, em em { font-style: normal; }
+.taskpaper .project { font-weight: bold; } .taskpaper .project ul { font-weight: normal; }
+.taskpaper li.project > span.item:after { content: ":"; }
+.taskpaper li.task  > span.item:before, .taskpaper.editable li.task.done > span.item:hover:before { content: "\f10c"; font-family: FontAwesome; color: #999; text-decoration: none; display: inline-block; width: 22px; }
+.taskpaper li.task.done > span.item:before, .taskpaper.editable li.task > span.item:hover:before { content: "\f05d"; font-family: FontAwesome; color: #999; text-decoration: none; display: inline-block; width: 22px; }
+.taskpaper li.done li.task span.item:before { content: "\f05d"; font-family: FontAwesome; color: #999; text-decoration: none; display: inline-block; width: 22px; }
+.taskpaper.editable li.task > span.item:hover:before, .taskpaper.editable li.task.done > span.item:hover:before { color: #966; }
+.taskpaper.editable li.task > span.item:hover { cursor: pointer; }
+.taskpaper li.task { margin-left: -22px; padding-left: -22px; }
+.taskpaper ul.root > li.task { margin-left: 0; padding-left: 0; }
+.taskpaper ul.root > ul.generic { margin-left: 22px; }
+
+/* TAGS */
+span.tag, tag { color: #933; font-weight: normal; }
+span.tag > span.value, tag > value { color: #99D; }
+span.tag:before, tag:before { content: "\20@"; width: 26px; font-weight: bold; color: #D99; }
+/* span.tag > span.value, tag > value { visibility: hidden; display: none; } */
+span.tag:hover > span.value, tag:hover > value { visibility: visible; display: inherit; }
+span.tag > span.value:before, tag > value:before { content: "("; font-weight: bold; color: #D99; }
+span.tag > span.value:after, tag > value:after { content: ")"; font-weight: bold; color: #D99; }
+span.tag.url, tag.url { cursor: alias; }
+
+/* TOOLS */
+.taskpaper li > span.tools, .non-taskpaper li > span.tools { visibility: hidden; float: right; }
+.taskpaper li > span.tools a { color: #999; } .taskpaper li span.tools a:hover { color: #669; }
+.taskpaper.editable li:hover > span.tools { visibility: visible; }
+.taskpaper li > span.tools a { cursor: pointer; }
+.taskpaper li:hover > span.tools a i.fa-bars { visibility: hidden; display: none; }
+.taskpaper.sortable.editable li:hover > span.tools a i.fa-bars { visibility: visible; display: inherit; }
+.taskpaper li > span.tools a i.fa-bars { cursor: move; cursor: row-resize; cursor: ns-resize; }
+.taskpaper li.project > span.tools a i.fa-bars { cursor: move; }
+.taskpaper li > span.tools a i.fa-edit { cursor: text; }
+.taskpaper li.project > span.tools a i.fa-check, .taskpaper li.empty > span.tools a i.fa-check, .taskpaper li.empty > span.tools a i.fa-edit { visibility: hidden; display: none; }
+
+/* HIGHLIGHTS */
+/* .taskpaper ul > li:hover { background: rgba(128,128,128,0.1); } */
+.taskpaper ul.group:hover {}
+.taskpaper li.project:hover > ul.group { background-color: rgba(128,128,128,0.05); }
+
+
+/* .taskpaper.clean */
+.taskpaper.clean li.done, .taskpaper.clean span.tag, .taskpaper.clean tag > value { visibility: hidden; display: none; }
+.non-taskpaper.clean li.done, .non-taskpaper.clean span.tag, .non-taskpaper.clean tag > value { visibility: hidden; display: none; }
